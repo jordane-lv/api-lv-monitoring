@@ -3,6 +3,7 @@ import {
   IHostGroupResponse,
   ICreateHostAdapter,
   ICreateHostData,
+  IHostResponse,
 } from '../ICreateHostAdapter';
 
 const api = new ZabbixApi();
@@ -91,6 +92,32 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
         groupName: name,
         groupId: groupid,
       };
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  async getHostsByGroupID(groupId: string): Promise<IHostResponse[]> {
+    try {
+      const params = {
+        output: ['hostid', 'host', 'name'],
+        groupids: [groupId],
+        selectInterfaces: ['ip'],
+      };
+
+      const response = await api.execute({ method: 'host.get', params });
+
+      const { data } = response;
+
+      if (data.error) {
+        throw new Error(data.error.data);
+      }
+
+      if (data.result.length === 0) {
+        return null;
+      }
+
+      return data.result as IHostResponse[];
     } catch (error) {
       throw new Error(error.message);
     }

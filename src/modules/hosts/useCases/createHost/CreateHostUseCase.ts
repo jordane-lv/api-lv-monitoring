@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import validate from '../../../../utils/validate';
 import { ICreateHostAdapter } from '../../adapters/ICreateHostAdapter';
 
-interface IRequest {
+export interface IRequest {
   codigo: string;
   sigla: string;
   nome_host: string;
@@ -44,6 +44,24 @@ export class CreateHostUseCase {
 
     if (!validate.validateHostName(hostName)) {
       throw new Error('Nome do host inválido!');
+    }
+
+    const hosts = await this.createHostAdapter.getHostsByGroupID(groupId);
+
+    if (hosts) {
+      const hostAlreadyExists = hosts.some(host => host.host === hostName);
+
+      if (hostAlreadyExists) {
+        throw new Error(`O host com nome ${hostName} já existe.`);
+      }
+
+      const ipAlreadyExists = hosts.some(host =>
+        host.interfaces.some(hostInterface => hostInterface.ip === ip),
+      );
+
+      if (ipAlreadyExists) {
+        throw new Error(`O IP ${ip} já existe.`);
+      }
     }
 
     await this.createHostAdapter.create({

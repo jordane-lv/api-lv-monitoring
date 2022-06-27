@@ -1,22 +1,25 @@
-import { IHostGroupResponse } from '../../adapters/ICreateHostAdapter';
-import { CreateHostUseCase } from './CreateHostUseCase';
-
-const createHostSpy = jest.fn();
-const getHostGroupByNameSpy = jest.fn(async (groupName?: string) => {
-  const group = { groupId: '1', groupName: 'TST' } as IHostGroupResponse;
-
-  return groupName === 'TST' ? group : null;
-});
+import {
+  createHostSpy,
+  getHostGroupByNameSpy,
+  getHostsByGroupIDSpy,
+  clearHostList,
+} from '../../mocks/CreateHostAdapterMock';
+import { IRequest, CreateHostUseCase } from './CreateHostUseCase';
 
 describe('Create Host', () => {
-  const createHost = new CreateHostUseCase({
+  const createHostMock = new CreateHostUseCase({
     create: createHostSpy,
     getHostGroupByName: getHostGroupByNameSpy,
+    getHostsByGroupID: getHostsByGroupIDSpy,
+  });
+
+  beforeEach(() => {
+    clearHostList();
   });
 
   it('should be able to create a new host', async () => {
     await expect(
-      createHost.execute({
+      createHostMock.execute({
         codigo: '00000',
         sigla: 'TST',
         nome_host: 'HOST DE TESTE',
@@ -31,7 +34,7 @@ describe('Create Host', () => {
 
   it('should not be possible to register a new host with an empty code', async () => {
     await expect(
-      createHost.execute({
+      createHostMock.execute({
         codigo: '',
         sigla: 'TST',
         nome_host: 'HOST DE TESTE',
@@ -45,7 +48,7 @@ describe('Create Host', () => {
 
   it('should not be possible to register a new host with the empty acronym', async () => {
     await expect(
-      createHost.execute({
+      createHostMock.execute({
         codigo: '00000',
         sigla: '',
         nome_host: 'HOST DE TESTE',
@@ -59,7 +62,7 @@ describe('Create Host', () => {
 
   it('should not be possible to register a new host with the empty host name', async () => {
     await expect(
-      createHost.execute({
+      createHostMock.execute({
         codigo: '00000',
         sigla: 'TST',
         nome_host: '',
@@ -73,7 +76,7 @@ describe('Create Host', () => {
 
   it('should not be able to create a new host with the empty ip address', async () => {
     await expect(
-      createHost.execute({
+      createHostMock.execute({
         codigo: '00000',
         sigla: 'TST',
         nome_host: 'HOST DE TESTE',
@@ -87,7 +90,7 @@ describe('Create Host', () => {
 
   it('should not be able to create a new host with the invalid host name', async () => {
     await expect(
-      createHost.execute({
+      createHostMock.execute({
         codigo: '00000',
         sigla: 'TST',
         nome_host: 'TESTE @ NOME INVÁLIDO.',
@@ -101,7 +104,7 @@ describe('Create Host', () => {
 
   it('should not be able to create a new host with the invalid ip address', async () => {
     await expect(
-      createHost.execute({
+      createHostMock.execute({
         codigo: '00000',
         sigla: 'TST',
         nome_host: 'HOST DE TESTE',
@@ -112,5 +115,43 @@ describe('Create Host', () => {
 
     expect(getHostGroupByNameSpy).not.toBeCalled();
     expect(createHostSpy).not.toBeCalled();
+  });
+
+  it('should not be possible to register an already existing host', async () => {
+    const hostDuplicateTest: IRequest = {
+      codigo: '00000',
+      sigla: 'TST',
+      nome_host: 'TESTE NOME DUPLICADO',
+      ip: '10.0.0.1',
+      tipo: 'switch',
+    };
+
+    await createHostMock.execute(hostDuplicateTest);
+
+    hostDuplicateTest.ip = '10.0.0.6';
+
+    await expect(createHostMock.execute(hostDuplicateTest)).rejects.toThrow();
+  });
+
+  it('should not be possible to register a host with an existing IP', async () => {
+    const ipAddress = '10.0.1.10';
+
+    await createHostMock.execute({
+      codigo: '00000',
+      sigla: 'TST',
+      nome_host: 'NOME DO HOST',
+      ip: ipAddress,
+      tipo: 'switch',
+    });
+
+    await expect(
+      createHostMock.execute({
+        codigo: '00000',
+        sigla: 'TST',
+        nome_host: 'OUTRO HOST',
+        ip: ipAddress,
+        tipo: 'switch',
+      }),
+    ).rejects.toThrow();
   });
 });
