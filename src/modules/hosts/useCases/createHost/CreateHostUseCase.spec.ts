@@ -134,13 +134,13 @@ describe('Create Host', () => {
   });
 
   it('should not be possible to register a host with an existing IP', async () => {
-    const ipAddress = '10.0.1.10';
+    const existingIpAddress = '10.0.1.10';
 
     await createHostMock.execute({
       codigo: '00000',
       sigla: 'TST',
       nome_host: 'NOME DO HOST',
-      ip: ipAddress,
+      ip: existingIpAddress,
       tipo: 'switch',
     });
 
@@ -149,7 +149,7 @@ describe('Create Host', () => {
         codigo: '00000',
         sigla: 'TST',
         nome_host: 'OUTRO HOST',
-        ip: ipAddress,
+        ip: existingIpAddress,
         tipo: 'switch',
       }),
     ).rejects.toThrow();
