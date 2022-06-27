@@ -38,11 +38,11 @@ export class CreateHostUseCase {
     const { groupName, groupId } =
       await this.createHostAdapter.getHostGroupByName(sigla);
 
-    const hostName = `${codigo.toUpperCase()} ${groupName.toUpperCase()} - ${nome_host.toUpperCase()}`;
+    const hostName = `${codigo.toUpperCase().trim()} ${groupName
+      .toUpperCase()
+      .trim()} - ${nome_host.toUpperCase().trim()}`;
 
-    const isValidHostName = validate.validateHostName(hostName);
-
-    if (!isValidHostName) {
+    if (!validate.validateHostName(hostName)) {
       throw new Error('Nome do host inválido!');
     }
 

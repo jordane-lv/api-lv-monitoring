@@ -90,7 +90,7 @@ describe('Create Host', () => {
       createHost.execute({
         codigo: '00000',
         sigla: 'TST',
-        nome_host: '@ TESTE NOME INVÁLIDO',
+        nome_host: 'TESTE @ NOME INVÁLIDO.',
         ip: '10.0.0.1',
         tipo: 'switch',
       }),

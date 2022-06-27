@@ -7,8 +7,8 @@ export default {
     const reName = '[A-Z0-9\\s-]+';
 
     const reHostName = new RegExp(
-      `\\b${reCode}\\s${reInitials}\\s-\\s${reName}\\b`,
-      'g',
+      `^${reCode}\\s${reInitials}\\s-\\s${reName}$`,
+      'gm',
     );
 
     return reHostName.test(hostName);
