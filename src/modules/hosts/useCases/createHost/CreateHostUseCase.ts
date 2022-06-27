@@ -1,3 +1,5 @@
+import { inject, injectable } from 'tsyringe';
+
 import validate from '../../../../utils/validate';
 import { ICreateHostAdapter } from '../../adapters/ICreateHostAdapter';
 
@@ -9,8 +11,12 @@ interface IRequest {
   tipo: 'olt' | 'switch' | 'router' | 'wireless' | 'server' | 'pop';
 }
 
+@injectable()
 export class CreateHostUseCase {
-  constructor(private createHostAdapter: ICreateHostAdapter) {}
+  constructor(
+    @inject('CreateHostAdapter')
+    private createHostAdapter: ICreateHostAdapter,
+  ) {}
 
   async execute({ codigo, sigla, ip, nome_host, tipo }: IRequest) {
     if (!codigo) {

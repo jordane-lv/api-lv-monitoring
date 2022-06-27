@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
-import { createHostController } from '../modules/hosts/useCases/createHost';
+import { CreateHostController } from '../modules/hosts/useCases/createHost/CreateHostController';
 
 export const hostRoutes = Router();
 
-hostRoutes.post('/', (request, response) => {
-  return createHostController.handle(request, response);
-});
+const createHostController = new CreateHostController();
+
+hostRoutes.post('/', createHostController.handle);
