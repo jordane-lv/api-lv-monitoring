@@ -41,7 +41,7 @@ export class ZabbixApi {
         .then(response => {
           resolve(response);
         })
-        .catch(error => reject(error.data));
+        .catch(error => reject(error));
     });
   }
 }
