@@ -1,15 +1,34 @@
 import { inject, injectable } from 'tsyringe';
 
 import { AppError } from '../../../../errors/AppError';
-import validate from '../../../../utils/validate';
+import patterns from '../../../../utils/patterns';
+import checks from '../../../../utils/validate';
 import { ICreateHostAdapter } from '../../adapters/ICreateHostAdapter';
+
+const hostTypes = [
+  'olt',
+  'switch',
+  'router',
+  'wireless',
+  'server',
+  'pop',
+] as const;
+
+type HostType = typeof hostTypes[number];
 
 export interface IRequest {
   codigo: string;
   sigla: string;
   nome_host: string;
   ip: string;
-  tipo: 'olt' | 'switch' | 'router' | 'wireless' | 'server' | 'pop';
+  tipo: HostType;
+}
+
+interface IValidatedData {
+  name: string;
+  ipAddress: string;
+  type: HostType;
+  groupId: string;
 }
 
 @injectable()
@@ -19,7 +38,36 @@ export class CreateHostUseCase {
     private createHostAdapter: ICreateHostAdapter,
   ) {}
 
-  async execute({ codigo, sigla, ip, nome_host, tipo }: IRequest) {
+  async execute(data: IRequest): Promise<void> {
+    const { name, ipAddress, type, groupId } = await this.validateRequestData(
+      data,
+    );
+
+    await this.createHostAdapter.create({
+      name,
+      ipAddress,
+      type,
+      hostGroup: {
+        groupId,
+      },
+    });
+  }
+
+  async validateRequestData({
+    codigo,
+    ip,
+    nome_host,
+    sigla,
+    tipo,
+  }: IRequest): Promise<IValidatedData> {
+    const validType = hostTypes.some(hostType => hostType === tipo);
+
+    if (!validType) {
+      throw new AppError(
+        `Tipo de host inválido, são aceitos apenas: ${hostTypes.join(', ')}`,
+      );
+    }
+
     if (!codigo) {
       throw new AppError('O código é obrigatório!');
     }
@@ -32,18 +80,20 @@ export class CreateHostUseCase {
       throw new AppError('O ip é obrigatório!');
     }
 
-    if (!validate.validateIpAddress(ip)) {
+    if (!checks.validIpAddress(ip)) {
       throw new AppError('Formato de IP inválido.');
     }
 
     const { groupName, groupId } =
       await this.createHostAdapter.getHostGroupByName(sigla);
 
-    const hostName = `${codigo.toUpperCase().trim()} ${groupName
-      .toUpperCase()
-      .trim()} - ${nome_host.toUpperCase().trim()}`;
+    const hostName = patterns.getHostNameFormat({
+      code: codigo,
+      groupName,
+      name: nome_host,
+    });
 
-    if (!validate.validateHostName(hostName)) {
+    if (!checks.validHostName(hostName)) {
       throw new AppError('Nome do host inválido!');
     }
 
@@ -65,13 +115,11 @@ export class CreateHostUseCase {
       }
     }
 
-    await this.createHostAdapter.create({
+    return {
       name: hostName,
       ipAddress: ip,
       type: tipo,
-      hostGroup: {
-        groupId,
-      },
-    });
+      groupId,
+    };
   }
 }
