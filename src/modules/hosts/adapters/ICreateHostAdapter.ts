@@ -14,8 +14,7 @@ export interface IHostGroupResponse {
 }
 
 export interface IHostResponse {
-  hostid: string;
-  host: string;
+  hostId: string;
   name: string;
   interfaces: { ip: string }[];
 }

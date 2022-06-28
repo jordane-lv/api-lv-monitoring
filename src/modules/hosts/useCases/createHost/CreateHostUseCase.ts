@@ -50,7 +50,7 @@ export class CreateHostUseCase {
     const hosts = await this.createHostAdapter.getHostsByGroupID(groupId);
 
     if (hosts) {
-      const hostAlreadyExists = hosts.some(host => host.host === hostName);
+      const hostAlreadyExists = hosts.some(host => host.name === hostName);
 
       if (hostAlreadyExists) {
         throw new AppError(`O host com nome ${hostName} já existe.`);

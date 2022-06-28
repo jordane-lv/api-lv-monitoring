@@ -118,7 +118,15 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
         return null;
       }
 
-      return data.result as IHostResponse[];
+      const hosts: IHostResponse[] = data.result.map((host): IHostResponse => {
+        return {
+          hostId: host.hostid,
+          name: host.host,
+          interfaces: host.interfaces,
+        };
+      });
+
+      return hosts;
     } catch (error) {
       throw new AppError(error.message);
     }
