@@ -1,5 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
+import { AppError } from '../../../../errors/AppError';
 import validate from '../../../../utils/validate';
 import { ICreateHostAdapter } from '../../adapters/ICreateHostAdapter';
 
@@ -20,19 +21,19 @@ export class CreateHostUseCase {
 
   async execute({ codigo, sigla, ip, nome_host, tipo }: IRequest) {
     if (!codigo) {
-      throw new Error('O código é obrigatório!');
+      throw new AppError('O código é obrigatório!');
     }
 
     if (!nome_host) {
-      throw new Error('O nome do host é obrigatório!');
+      throw new AppError('O nome do host é obrigatório!');
     }
 
     if (!ip) {
-      throw new Error('O ip é obrigatório!');
+      throw new AppError('O ip é obrigatório!');
     }
 
     if (!validate.validateIpAddress(ip)) {
-      throw new Error('Formato de IP inválido.');
+      throw new AppError('Formato de IP inválido.');
     }
 
     const { groupName, groupId } =
@@ -43,7 +44,7 @@ export class CreateHostUseCase {
       .trim()} - ${nome_host.toUpperCase().trim()}`;
 
     if (!validate.validateHostName(hostName)) {
-      throw new Error('Nome do host inválido!');
+      throw new AppError('Nome do host inválido!');
     }
 
     const hosts = await this.createHostAdapter.getHostsByGroupID(groupId);
@@ -52,7 +53,7 @@ export class CreateHostUseCase {
       const hostAlreadyExists = hosts.some(host => host.host === hostName);
 
       if (hostAlreadyExists) {
-        throw new Error(`O host com nome ${hostName} já existe.`);
+        throw new AppError(`O host com nome ${hostName} já existe.`);
       }
 
       const ipAlreadyExists = hosts.some(host =>
@@ -60,7 +61,7 @@ export class CreateHostUseCase {
       );
 
       if (ipAlreadyExists) {
-        throw new Error(`O IP ${ip} já existe.`);
+        throw new AppError(`O IP ${ip} já existe.`);
       }
     }
 

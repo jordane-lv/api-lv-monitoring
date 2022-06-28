@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
+import { AppError } from '../errors/AppError';
+
 interface IRequest {
   method: string;
   params: object;
@@ -13,11 +15,11 @@ export class ZabbixApi {
     const { ZBX_URL, ZBX_TOKEN } = process.env;
 
     if (!ZBX_URL) {
-      throw new Error('Zabbix Url not found!');
+      throw new AppError('Zabbix Url not found!');
     }
 
     if (!ZBX_TOKEN) {
-      throw new Error('Zabbix Api Token not found!');
+      throw new AppError('Zabbix Api Token not found!');
     }
 
     this.url = ZBX_URL;

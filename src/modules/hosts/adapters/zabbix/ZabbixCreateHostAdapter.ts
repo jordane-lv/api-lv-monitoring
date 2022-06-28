@@ -1,3 +1,4 @@
+import { AppError } from '../../../../errors/AppError';
 import { ZabbixApi } from '../../../../services/zabbix-api';
 import {
   IHostGroupResponse,
@@ -58,10 +59,10 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
       const { data } = response;
 
       if (data.error) {
-        throw new Error(data.error.data);
+        throw new AppError(data.error.data);
       }
     } catch (error) {
-      throw new Error(error.message);
+      throw new AppError(error.message);
     }
   }
 
@@ -79,11 +80,11 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
       const { data } = response;
 
       if (data.error) {
-        throw new Error(data.error.data);
+        throw new AppError(data.error.data);
       }
 
       if (data.result.length === 0) {
-        throw new Error('Grupo de Hosts não encontrado.');
+        throw new AppError('Grupo de Hosts não encontrado.');
       }
 
       const { name, groupid } = data.result[0] as IHostGroupZabbixResponse;
@@ -93,7 +94,7 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
         groupId: groupid,
       };
     } catch (error) {
-      throw new Error(error.message);
+      throw new AppError(error.message);
     }
   }
 
@@ -110,7 +111,7 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
       const { data } = response;
 
       if (data.error) {
-        throw new Error(data.error.data);
+        throw new AppError(data.error.data);
       }
 
       if (data.result.length === 0) {
@@ -119,7 +120,7 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
 
       return data.result as IHostResponse[];
     } catch (error) {
-      throw new Error(error.message);
+      throw new AppError(error.message);
     }
   }
 }

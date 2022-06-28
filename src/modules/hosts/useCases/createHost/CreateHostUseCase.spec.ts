@@ -1,3 +1,4 @@
+import { AppError } from '../../../../errors/AppError';
 import {
   createHostSpy,
   getHostGroupByNameSpy,
@@ -41,7 +42,7 @@ describe('Create Host', () => {
         ip: '10.0.0.1',
         tipo: 'switch',
       }),
-    ).rejects.toThrow();
+    ).rejects.toEqual(new AppError('O código é obrigatório!'));
 
     expect(createHostSpy).not.toBeCalled();
   });
@@ -69,7 +70,7 @@ describe('Create Host', () => {
         ip: '10.0.0.1',
         tipo: 'switch',
       }),
-    ).rejects.toThrow();
+    ).rejects.toEqual(new AppError('O nome do host é obrigatório!'));
 
     expect(createHostSpy).not.toBeCalled();
   });
@@ -83,7 +84,7 @@ describe('Create Host', () => {
         ip: '',
         tipo: 'switch',
       }),
-    ).rejects.toThrow();
+    ).rejects.toEqual(new AppError('O ip é obrigatório!'));
 
     expect(createHostSpy).not.toBeCalled();
   });
@@ -97,7 +98,7 @@ describe('Create Host', () => {
         ip: '10.0.0.1',
         tipo: 'switch',
       }),
-    ).rejects.toThrow();
+    ).rejects.toEqual(new AppError('Nome do host inválido!'));
 
     expect(createHostSpy).not.toBeCalled();
   });
@@ -111,7 +112,7 @@ describe('Create Host', () => {
         ip: '10.0.0.256',
         tipo: 'switch',
       }),
-    ).rejects.toThrow();
+    ).rejects.toEqual(new AppError('Formato de IP inválido.'));
 
     expect(getHostGroupByNameSpy).not.toBeCalled();
     expect(createHostSpy).not.toBeCalled();
@@ -129,8 +130,13 @@ describe('Create Host', () => {
     await createHostMock.execute(hostDuplicateTest);
 
     hostDuplicateTest.ip = '10.0.0.6';
+    const { codigo, sigla, nome_host } = hostDuplicateTest;
 
-    await expect(createHostMock.execute(hostDuplicateTest)).rejects.toThrow();
+    await expect(createHostMock.execute(hostDuplicateTest)).rejects.toEqual(
+      new AppError(
+        `O host com nome ${codigo} ${sigla} - ${nome_host} já existe.`,
+      ),
+    );
   });
 
   it('should not be possible to register a host with an existing IP', async () => {
@@ -152,6 +158,6 @@ describe('Create Host', () => {
         ip: existingIpAddress,
         tipo: 'switch',
       }),
-    ).rejects.toThrow();
+    ).rejects.toEqual(new AppError(`O IP ${existingIpAddress} já existe.`));
   });
 });
