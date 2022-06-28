@@ -18,7 +18,7 @@ export class CreateMapUseCase {
 
   async execute({ codigo, sigla, mapName }: IRequest) {
     const usersGroup = await this.createMapAdapter.getUserGroupByName(sigla);
-    const hostGroup = await this.createMapAdapter.getHostGroupByName(sigla);
+    const hostsGroup = await this.createMapAdapter.getHostGroupByName(sigla);
 
     const name = patterns.getMapNameFormat({
       code: codigo,
@@ -27,7 +27,7 @@ export class CreateMapUseCase {
     });
 
     const allHosts = await this.createMapAdapter.getAllHostsByHostGroupId(
-      hostGroup.groupId,
+      hostsGroup.groupId,
     );
 
     const hostsFilteredByCode = allHosts.filter(host =>
