@@ -35,8 +35,18 @@
                     }
                   },
                   "example": {
-                    "message": "O host com nome EXEMPLO já existe."
+                    "message": "O host com nome 12345 EXP - EXEMPLO já existe."
                   }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno da aplicação.",
+            "content": {
+              "application/json": {
+                "schema": {            
+                  "$ref": "#/errors/InternalErrors"
                 }
               }
             }
@@ -79,6 +89,16 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Erro interno da aplicação.",
+            "content": {
+              "application/json": {
+                "schema": {            
+                  "$ref": "#/errors/InternalErrors"
+                }
+              }
+            }
           }
         }
       }
@@ -101,10 +121,18 @@
           "type": "string"
         },
         "tipo": {
-          "type": "string"
+          "type": "string",
+          "enum": [ "olt", "switch", "router", "wireless", "server", "pop" ]
         }
       },
-      "required": ["codigo", "sigla", "nome_host", "ip", "tipo"]
+      "required": [ "codigo", "sigla", "nome_host", "ip" ],
+      "example": {
+        "codigo": "12345",
+        "sigla": "EXP",
+        "nome_host": "EXEMPLO",
+        "ip": "10.0.0.1",
+        "tipo": "switch"
+      }
     },
     "CreateMap": {
       "type": "object",
@@ -119,7 +147,29 @@
           "type": "string"
         }
       },
-      "required": ["codigo", "sigla", "nome_mapa"]
+      "required": ["codigo", "sigla", "nome_mapa"],
+      "example": {
+        "codigo": "12345",
+        "sigla": "EXP",
+        "nome_mapa": "MAPA DE EXEMPLO"
+      }
+    }
+  },
+  "errors": {
+    "InternalErrors": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+          },
+        "message": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "status": "error",
+        "message": "Internal error"
+      }
     }
   }
 }

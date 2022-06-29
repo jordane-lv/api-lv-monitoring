@@ -21,7 +21,7 @@ export interface IRequest {
   sigla: string;
   nome_host: string;
   ip: string;
-  tipo: HostType;
+  tipo?: HostType;
 }
 
 interface IValidatedData {
@@ -60,12 +60,14 @@ export class CreateHostUseCase {
     sigla,
     tipo,
   }: IRequest): Promise<IValidatedData> {
-    const validType = hostTypes.some(hostType => hostType === tipo);
+    if (tipo) {
+      const validType = hostTypes.some(hostType => hostType === tipo);
 
-    if (!validType) {
-      throw new AppError(
-        `Tipo de host inválido, são aceitos apenas: ${hostTypes.join(', ')}`,
-      );
+      if (!validType) {
+        throw new AppError(
+          `Tipo de host inválido, são aceitos apenas: ${hostTypes.join(', ')}`,
+        );
+      }
     }
 
     if (!nome_host) {
