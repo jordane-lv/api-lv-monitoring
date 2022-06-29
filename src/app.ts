@@ -3,14 +3,18 @@ import 'dotenv/config';
 
 import express, { Request, Response, NextFunction } from 'express';
 import 'express-async-errors';
+import swaggerUi from 'swagger-ui-express';
 
 import './shared/container';
 import { AppError } from './errors/AppError';
 import { routes } from './routes';
+import swaggerFile from './swagger.json';
 
 const app = express();
 
 app.use(express.json());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
 app.use(routes);
 
 app.use(
