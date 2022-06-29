@@ -22,7 +22,7 @@ export class ZabbixCreateMapAdapter implements ICreateMapAdapter {
             },
           ],
           elementtype: 0,
-          iconid_off: '2', // '4884', // ID do ícone em produção 4884
+          iconid_off: '4884',
           use_iconmap: 1,
         };
       });

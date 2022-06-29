@@ -1,7 +1,7 @@
 export interface ICreateHostData {
   name: string;
   ipAddress: string;
-  type: string;
+  type?: string;
   hostGroup: {
     groupName?: string;
     groupId: string;

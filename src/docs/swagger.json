@@ -1,0 +1,175 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API LV Monitoring",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/hosts": {
+      "post": {
+        "tags": ["Host"],
+        "summary": "Criar um novo host",
+        "description": "Recurso utilizado para fazer a criação de um novo host.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/CreateHost"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado"
+          },
+          "400": {
+            "description": "O Host já existe ou algum dado que foi enviado é inválido.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "message": "O host com nome 12345 EXP - EXEMPLO já existe."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno da aplicação.",
+            "content": {
+              "application/json": {
+                "schema": {            
+                  "$ref": "#/errors/InternalErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/maps": {
+      "post": {
+        "tags": ["Mapa"],
+        "summary": "Criar um novo mapa",
+        "description": "Cria um novo mapa, adicionando dentro do mapa criado os hosts já cadastrados no sistema de monitoramento.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/CreateMap"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado"
+          },
+          "400": {
+            "description": "O Mapa já existe ou não foram encontrados nenhum host cadastrado com o mesmo código do mapa, sendo assim ele não faz a criação do mapa.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "message": "Não existem hosts cadastrados com o mesmo código do mapa."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno da aplicação.",
+            "content": {
+              "application/json": {
+                "schema": {            
+                  "$ref": "#/errors/InternalErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CreateHost": {
+      "type": "object",
+      "properties": {
+        "codigo": {
+          "type": "string"
+        },
+        "sigla": {
+          "type": "string"
+        },
+        "nome_host": {
+          "type": "string"
+        },
+        "ip": {
+          "type": "string"
+        },
+        "tipo": {
+          "type": "string",
+          "enum": [ "olt", "switch", "router", "wireless", "server", "pop" ]
+        }
+      },
+      "required": [ "codigo", "sigla", "nome_host", "ip" ],
+      "example": {
+        "codigo": "12345",
+        "sigla": "EXP",
+        "nome_host": "EXEMPLO",
+        "ip": "10.0.0.1",
+        "tipo": "switch"
+      }
+    },
+    "CreateMap": {
+      "type": "object",
+      "properties": {
+        "codigo": {
+          "type": "string"
+        },
+        "sigla": {
+          "type": "string"
+        },
+        "nome_mapa": {
+          "type": "string"
+        }
+      },
+      "required": ["codigo", "sigla", "nome_mapa"],
+      "example": {
+        "codigo": "12345",
+        "sigla": "EXP",
+        "nome_mapa": "MAPA DE EXEMPLO"
+      }
+    }
+  },
+  "errors": {
+    "InternalErrors": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+          },
+        "message": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "status": "error",
+        "message": "Internal error"
+      }
+    }
+  }
+}
