@@ -21,9 +21,15 @@ export interface IHostResponse {
   interfaces: { ip: string }[];
 }
 
+export interface IMapResponse {
+  mapId: string;
+  mapName: string;
+}
+
 export interface ICreateMapAdapter {
   create(data: ICreateMapData): Promise<void>;
   getUserGroupByName(groupName: string): Promise<IGroupResponse>;
   getHostGroupByName(groupName: string): Promise<IGroupResponse>;
   getAllHostsByHostGroupId(groupId: string): Promise<IHostResponse[]>;
+  getAllMapsByUserGroupId(groupId: string): Promise<IMapResponse[]>;
 }

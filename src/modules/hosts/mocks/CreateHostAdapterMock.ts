@@ -19,9 +19,9 @@ const createHostSpy = jest.fn(async ({ name, ipAddress }: ICreateHostData) => {
 });
 
 const getHostGroupByNameSpy = jest.fn(async (groupName?: string) => {
-  const group = { groupId: '1', groupName: 'TST' } as IHostGroupResponse;
+  const group = { groupId: 'teste', groupName: 'TST' } as IHostGroupResponse;
 
-  return groupName === 'TST' ? group : null;
+  return groupName === 'TST' && group;
 });
 
 const getHostsByGroupIDSpy = jest.fn(

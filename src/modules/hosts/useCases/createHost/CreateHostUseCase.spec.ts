@@ -1,4 +1,5 @@
 import { AppError } from '../../../../errors/AppError';
+import patterns from '../../../../utils/patterns';
 import {
   createHostSpy,
   getHostGroupByNameSpy,
@@ -21,9 +22,9 @@ describe('Create Host', () => {
   it('should be able to create a new host', async () => {
     await expect(
       createHostMock.execute({
-        codigo: '00000',
+        codigo: '12345',
         sigla: 'TST',
-        nome_host: 'HOST DE TESTE',
+        nome_host: 'TEST HOST',
         ip: '10.0.0.1',
         tipo: 'switch',
       }),
@@ -38,33 +39,62 @@ describe('Create Host', () => {
       createHostMock.execute({
         codigo: '',
         sigla: 'TST',
-        nome_host: 'HOST DE TESTE',
+        nome_host: 'EMPTY CODE',
         ip: '10.0.0.1',
         tipo: 'switch',
       }),
-    ).rejects.toEqual(new AppError('O código é obrigatório!'));
+    ).rejects.toEqual(new AppError('Formato do código inválido.'));
 
     expect(createHostSpy).not.toBeCalled();
   });
 
-  it('should not be possible to register a new host with the empty acronym', async () => {
+  it('should not be able to register a new host with an invalid code', async () => {
     await expect(
       createHostMock.execute({
-        codigo: '00000',
-        sigla: '',
-        nome_host: 'HOST DE TESTE',
+        codigo: '123',
+        sigla: 'TST',
+        nome_host: 'INVALID CODE',
         ip: '10.0.0.1',
         tipo: 'switch',
       }),
-    ).rejects.toThrow();
+    ).rejects.toEqual(new AppError('Formato do código inválido.'));
 
+    expect(createHostSpy).not.toBeCalled();
+  });
+
+  it('should not be possible to register a new host with the empty initial', async () => {
+    await expect(
+      createHostMock.execute({
+        codigo: '12345',
+        sigla: '',
+        nome_host: 'EMPTY INITIAL',
+        ip: '10.0.0.1',
+        tipo: 'switch',
+      }),
+    ).rejects.toEqual(new AppError('Formato da sigla inválido.'));
+
+    expect(createHostSpy).not.toBeCalled();
+  });
+
+  it('should not be able to create a new host with the invalid initial', async () => {
+    await expect(
+      createHostMock.execute({
+        codigo: '12345',
+        sigla: '"',
+        nome_host: 'INVALID INITIAL',
+        ip: '10.0.0.1',
+        tipo: 'switch',
+      }),
+    ).rejects.toEqual(new AppError('Formato da sigla inválido.'));
+
+    expect(getHostGroupByNameSpy).not.toBeCalled();
     expect(createHostSpy).not.toBeCalled();
   });
 
   it('should not be possible to register a new host with the empty host name', async () => {
     await expect(
       createHostMock.execute({
-        codigo: '00000',
+        codigo: '12345',
         sigla: 'TST',
         nome_host: '',
         ip: '10.0.0.1',
@@ -78,9 +108,9 @@ describe('Create Host', () => {
   it('should not be able to create a new host with the empty ip address', async () => {
     await expect(
       createHostMock.execute({
-        codigo: '00000',
+        codigo: '12345',
         sigla: 'TST',
-        nome_host: 'HOST DE TESTE',
+        nome_host: 'EMPTY IP ADDRESS',
         ip: '',
         tipo: 'switch',
       }),
@@ -92,9 +122,9 @@ describe('Create Host', () => {
   it('should not be able to create a new host with the invalid host name', async () => {
     await expect(
       createHostMock.execute({
-        codigo: '00000',
+        codigo: '12345',
         sigla: 'TST',
-        nome_host: 'TESTE @ NOME INVÁLIDO.',
+        nome_host: 'INVALID @ HOST NAME.',
         ip: '10.0.0.1',
         tipo: 'switch',
       }),
@@ -106,9 +136,9 @@ describe('Create Host', () => {
   it('should not be able to create a new host with the invalid ip address', async () => {
     await expect(
       createHostMock.execute({
-        codigo: '00000',
+        codigo: '12345',
         sigla: 'TST',
-        nome_host: 'HOST DE TESTE',
+        nome_host: 'INVALID IP ADDRESS',
         ip: '10.0.0.256',
         tipo: 'switch',
       }),
@@ -120,22 +150,25 @@ describe('Create Host', () => {
 
   it('should not be possible to register an already existing host', async () => {
     const hostDuplicateTest: IRequest = {
-      codigo: '00000',
+      codigo: '12345',
       sigla: 'TST',
-      nome_host: 'TESTE NOME DUPLICADO',
+      nome_host: 'DUPLICATED HOST NAME',
       ip: '10.0.0.1',
       tipo: 'switch',
     };
 
+    const hostNamePattern = patterns.getHostNameFormat({
+      code: hostDuplicateTest.codigo,
+      groupName: hostDuplicateTest.sigla,
+      name: hostDuplicateTest.nome_host,
+    });
+
     await createHostMock.execute(hostDuplicateTest);
 
     hostDuplicateTest.ip = '10.0.0.6';
-    const { codigo, sigla, nome_host } = hostDuplicateTest;
 
     await expect(createHostMock.execute(hostDuplicateTest)).rejects.toEqual(
-      new AppError(
-        `O host com nome ${codigo} ${sigla} - ${nome_host} já existe.`,
-      ),
+      new AppError(`O host com nome ${hostNamePattern} já existe.`),
     );
   });
 
@@ -143,18 +176,18 @@ describe('Create Host', () => {
     const existingIpAddress = '10.0.1.10';
 
     await createHostMock.execute({
-      codigo: '00000',
+      codigo: '12345',
       sigla: 'TST',
-      nome_host: 'NOME DO HOST',
+      nome_host: 'FIRST HOST',
       ip: existingIpAddress,
       tipo: 'switch',
     });
 
     await expect(
       createHostMock.execute({
-        codigo: '00000',
+        codigo: '12345',
         sigla: 'TST',
-        nome_host: 'OUTRO HOST',
+        nome_host: 'ANOTHER HOST DUPLICATING IP ADDRESS',
         ip: existingIpAddress,
         tipo: 'switch',
       }),

@@ -16,4 +16,12 @@ export default {
   validIpAddress: (ipAddress: string): boolean => {
     return isIP(ipAddress) !== 0;
   },
+  validateCode: (code: string): boolean => {
+    const re = new RegExp(`^${reCode}$`, 'gm');
+    return re.test(code);
+  },
+  validateInitial: (initial: string): boolean => {
+    const re = new RegExp(`^${reInitials}$`, 'gm');
+    return re.test(initial);
+  },
 };

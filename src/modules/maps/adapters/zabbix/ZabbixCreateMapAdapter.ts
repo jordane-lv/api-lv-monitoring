@@ -5,6 +5,7 @@ import {
   ICreateMapData,
   IHostResponse,
   IGroupResponse,
+  IMapResponse,
 } from '../ICreateMapAdapter';
 
 const api = new ZabbixApi();
@@ -144,7 +145,7 @@ export class ZabbixCreateMapAdapter implements ICreateMapAdapter {
         throw new AppError(data.error.data);
       }
 
-      const hosts = data.result.map(host => {
+      const hosts = data.result.map((host): IHostResponse => {
         return {
           hostId: host.hostid,
           name: host.host,
@@ -153,6 +154,40 @@ export class ZabbixCreateMapAdapter implements ICreateMapAdapter {
       });
 
       return hosts;
+    } catch (error) {
+      throw new AppError(error.message);
+    }
+  }
+
+  async getAllMapsByUserGroupId(groupId: string): Promise<IMapResponse[]> {
+    try {
+      const params = {
+        output: ['sysmapid', 'name'],
+        filter: {
+          userGroups: {
+            usrgrpid: groupId,
+          },
+        },
+      };
+
+      const method = 'map.get';
+
+      const response = await api.execute({ method, params });
+
+      const { data } = response;
+
+      if (data.error) {
+        throw new AppError(data.error.data);
+      }
+
+      const maps = data.result.map((map): IMapResponse => {
+        return {
+          mapId: map.sysmapid,
+          mapName: map.name,
+        };
+      });
+
+      return maps;
     } catch (error) {
       throw new AppError(error.message);
     }
