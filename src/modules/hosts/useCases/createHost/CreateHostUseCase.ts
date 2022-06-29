@@ -68,10 +68,6 @@ export class CreateHostUseCase {
       );
     }
 
-    if (!codigo) {
-      throw new AppError('O código é obrigatório!');
-    }
-
     if (!nome_host) {
       throw new AppError('O nome do host é obrigatório!');
     }
@@ -82,6 +78,14 @@ export class CreateHostUseCase {
 
     if (!checks.validIpAddress(ip)) {
       throw new AppError('Formato de IP inválido.');
+    }
+
+    if (!checks.validateCode(codigo)) {
+      throw new AppError('Formato do código inválido.');
+    }
+
+    if (!checks.validateInitial(sigla)) {
+      throw new AppError('Formato da sigla inválido.');
     }
 
     const { groupName, groupId } =
