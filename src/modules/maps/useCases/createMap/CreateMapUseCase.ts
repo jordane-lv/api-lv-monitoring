@@ -2,8 +2,8 @@ import { inject, injectable } from 'tsyringe';
 
 import { AppError } from '../../../../errors/AppError';
 import patterns from '../../../../utils/patterns';
-import checks from '../../../../utils/validate';
 import { ICreateMapAdapter } from '../../adapters/ICreateMapAdapter';
+import { ValidateRequestMapDataUseCase } from '../validateRequestMapData/ValidateRequestMapDataUseCase';
 
 interface IRequest {
   codigo: string;
@@ -16,20 +16,16 @@ export class CreateMapUseCase {
   constructor(
     @inject('CreateMapAdapter')
     private createMapAdapter: ICreateMapAdapter,
+    @inject('ValidateRequestMapData')
+    private validateRequestMapDataUseCase: ValidateRequestMapDataUseCase,
   ) {}
 
   async execute({ codigo, sigla, mapName }: IRequest) {
-    if (!mapName) {
-      throw new AppError('O nome do mapa é obrigatório!');
-    }
-
-    if (!checks.validateCode(codigo)) {
-      throw new AppError('Formato de código inválido.');
-    }
-
-    if (!checks.validateInitial(sigla)) {
-      throw new AppError('Formato da sigla inválido.');
-    }
+    this.validateRequestMapDataUseCase.execute({
+      codigo,
+      sigla,
+      nome_mapa: mapName,
+    });
 
     const usersGroup = await this.createMapAdapter.getUserGroupByName(sigla);
     const hostsGroup = await this.createMapAdapter.getHostGroupByName(sigla);

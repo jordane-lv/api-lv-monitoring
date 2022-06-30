@@ -7,16 +7,20 @@ import {
   getHostGroupByNameSpy,
   getUserGroupByNameSpy,
 } from '../../mocks/CreateMapAdapterMock';
+import { ValidateRequestMapDataUseCase } from '../validateRequestMapData/ValidateRequestMapDataUseCase';
 import { CreateMapUseCase } from './CreateMapUseCase';
 
 describe('Create Map', () => {
-  const createMapUseCase = new CreateMapUseCase({
-    create: createMapSpy,
-    getAllHostsByHostGroupId: getAllHostsByHostGroupIdSpy,
-    getHostGroupByName: getHostGroupByNameSpy,
-    getUserGroupByName: getUserGroupByNameSpy,
-    getAllMapsByUserGroupId: getAllMapsByUserGroupIdSpy,
-  });
+  const createMapUseCase = new CreateMapUseCase(
+    {
+      create: createMapSpy,
+      getAllHostsByHostGroupId: getAllHostsByHostGroupIdSpy,
+      getHostGroupByName: getHostGroupByNameSpy,
+      getUserGroupByName: getUserGroupByNameSpy,
+      getAllMapsByUserGroupId: getAllMapsByUserGroupIdSpy,
+    },
+    new ValidateRequestMapDataUseCase(),
+  );
 
   it('should be able to create a new map', async () => {
     await expect(

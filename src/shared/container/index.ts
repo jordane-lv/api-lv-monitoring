@@ -5,6 +5,7 @@ import { ZabbixCreateHostAdapter } from '../../modules/hosts/adapters/zabbix/Zab
 import { ValidateRequestHostDataUseCase } from '../../modules/hosts/useCases/validateRequestHostData/ValidateRequestHostDataUseCase';
 import { ICreateMapAdapter } from '../../modules/maps/adapters/ICreateMapAdapter';
 import { ZabbixCreateMapAdapter } from '../../modules/maps/adapters/zabbix/ZabbixCreateMapAdapter';
+import { ValidateRequestMapDataUseCase } from '../../modules/maps/useCases/validateRequestMapData/ValidateRequestMapDataUseCase';
 
 container.registerSingleton<ICreateHostAdapter>(
   'CreateHostAdapter',
@@ -19,4 +20,9 @@ container.registerSingleton<ICreateMapAdapter>(
 container.register<ValidateRequestHostDataUseCase>(
   'ValidateRequestHostData',
   ValidateRequestHostDataUseCase,
+);
+
+container.register<ValidateRequestMapDataUseCase>(
+  'ValidateRequestMapData',
+  ValidateRequestMapDataUseCase,
 );
