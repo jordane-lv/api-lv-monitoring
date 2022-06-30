@@ -14,11 +14,11 @@ export class ValidateRequestMapDataUseCase {
     }
 
     if (!checks.validateCode(codigo)) {
-      throw new AppError('Formato de código inválido.');
+      throw new AppError(`Formato do código "${codigo}" inválido.`);
     }
 
     if (!checks.validateInitial(sigla)) {
-      throw new AppError('Formato da sigla inválido.');
+      throw new AppError(`Formato da sigla "${sigla}" inválido.`);
     }
   }
 }

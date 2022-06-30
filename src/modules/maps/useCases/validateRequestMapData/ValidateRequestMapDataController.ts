@@ -5,21 +5,22 @@ import {
   ValidateRequestMapDataUseCase,
 } from './ValidateRequestMapDataUseCase';
 
+const validateRequestMapData = new ValidateRequestMapDataUseCase();
+
 export class ValidateRequestMapDataController {
   handle(request: Request, response: Response): Response {
-    const { codigo, sigla, nome_mapa }: IRequestValidateRequestMapData =
-      request.body;
+    const maps: IRequestValidateRequestMapData[] = request.body;
 
-    const validateRequestMapData = new ValidateRequestMapDataUseCase();
+    maps.forEach(map => {
+      const { codigo, sigla, nome_mapa } = map;
 
-    validateRequestMapData.execute({
-      codigo,
-      sigla,
-      nome_mapa,
+      validateRequestMapData.execute({
+        codigo,
+        sigla,
+        nome_mapa,
+      });
     });
 
-    return response
-      .status(200)
-      .json({ status: 'ok', message: 'Os dados do mapa estão corretos.' });
+    return response.status(200).send();
   }
 }

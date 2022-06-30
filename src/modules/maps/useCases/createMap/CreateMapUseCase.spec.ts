@@ -1,5 +1,6 @@
 import { AppError } from '../../../../errors/AppError';
 import patterns from '../../../../utils/patterns';
+import { IRequest } from '../../../hosts/useCases/createHost/CreateHostUseCase';
 import {
   createMapSpy,
   getAllHostsByHostGroupIdSpy,
@@ -35,13 +36,15 @@ describe('Create Map', () => {
   });
 
   it('should not be able to create a new map with an invalid code', async () => {
-    await expect(
-      createMapUseCase.execute({
-        codigo: '123',
-        sigla: 'TST',
-        mapName: 'INVALID CODE TEST',
-      }),
-    ).rejects.toEqual(new AppError('Formato de código inválido.'));
+    const mapInvalidCode = {
+      codigo: '123',
+      sigla: 'TST',
+      mapName: 'INVALID CODE TEST',
+    };
+
+    await expect(createMapUseCase.execute(mapInvalidCode)).rejects.toEqual(
+      new AppError(`Formato do código "${mapInvalidCode.codigo}" inválido.`),
+    );
 
     expect(getHostGroupByNameSpy).not.toBeCalled();
     expect(getUserGroupByNameSpy).not.toBeCalled();
@@ -50,13 +53,15 @@ describe('Create Map', () => {
   });
 
   it('should not be able to create a new map with an invalid initial', async () => {
-    await expect(
-      createMapUseCase.execute({
-        codigo: '12345',
-        sigla: 'INVALID',
-        mapName: 'INVALID INITIAL',
-      }),
-    ).rejects.toEqual(new AppError('Formato da sigla inválido.'));
+    const mapInvalidInitial = {
+      codigo: '12345',
+      sigla: 'INVALID',
+      mapName: 'INVALID INITIAL',
+    };
+
+    await expect(createMapUseCase.execute(mapInvalidInitial)).rejects.toEqual(
+      new AppError(`Formato da sigla "${mapInvalidInitial.sigla}" inválido.`),
+    );
 
     expect(getHostGroupByNameSpy).not.toBeCalled();
     expect(getUserGroupByNameSpy).not.toBeCalled();

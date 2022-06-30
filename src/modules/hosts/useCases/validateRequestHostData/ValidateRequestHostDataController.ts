@@ -5,23 +5,24 @@ import {
   ValidateRequestHostDataUseCase,
 } from './ValidateRequestHostDataUseCase';
 
+const validateRequestHostData = new ValidateRequestHostDataUseCase();
+
 export class ValidateRequestHostDataController {
   handle(request: Request, response: Response): Response {
-    const { codigo, sigla, nome_host, ip, tipo }: IRequestValidateHostData =
-      request.body;
+    const hosts: IRequestValidateHostData[] = request.body;
 
-    const validateRequestHostData = new ValidateRequestHostDataUseCase();
+    hosts.forEach(host => {
+      const { codigo, sigla, nome_host, ip, tipo } = host;
 
-    validateRequestHostData.execute({
-      codigo,
-      sigla,
-      nome_host,
-      ip,
-      tipo,
+      validateRequestHostData.execute({
+        codigo,
+        sigla,
+        nome_host,
+        ip,
+        tipo,
+      });
     });
 
-    return response
-      .status(200)
-      .json({ status: 'ok', message: 'Todos os dados estão corretos.' });
+    return response.status(200).send();
   }
 }

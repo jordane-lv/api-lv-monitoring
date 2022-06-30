@@ -31,15 +31,15 @@ export class ValidateRequestHostDataUseCase {
     }
 
     if (!checks.validIpAddress(ip)) {
-      throw new AppError('Formato de IP inválido.');
+      throw new AppError(`Formato do IP "${ip}" inválido.`);
     }
 
     if (!checks.validateCode(codigo)) {
-      throw new AppError('Formato do código inválido.');
+      throw new AppError(`Formato do código "${codigo}" inválido.`);
     }
 
     if (!checks.validateInitial(sigla)) {
-      throw new AppError('Formato da sigla inválido.');
+      throw new AppError(`Formato da sigla "${sigla}" inválido.`);
     }
 
     if (!checks.validHostName(nome_host)) {
