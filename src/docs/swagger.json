@@ -54,6 +54,48 @@
         }
       }
     },
+    "/hosts/check": {
+      "post": {
+        "tags": ["Host"],
+        "summary": "Verifica os dados dos hosts",
+        "description": "Verifica se os dados da lista de hosts estão corretos.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/CreateHost"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Todos os dados dos hosts estão corretos."
+          },
+          "400": {
+            "description": "Algum dos dados informado está incorreto.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "message": "O nome do host \"EX@AMPLE\" está incorreto."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/maps": {
       "post": {
         "tags": ["Mapa"],
@@ -96,6 +138,48 @@
               "application/json": {
                 "schema": {            
                   "$ref": "#/errors/InternalErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/maps/check": {
+      "post": {
+        "tags": ["Mapa"],
+        "summary": "Verifica os dados dos mapas.",
+        "description": "Verifica se os dados da lista de mapas estão corretos.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/CreateMap"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Todos os dados dos mapas estão corretos."
+          },
+          "400": {
+            "description": "Algum dos dados informado está incorreto.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "message": "O nome do mapa \"EX@AMPLE\" está incorreto."
+                  }
                 }
               }
             }

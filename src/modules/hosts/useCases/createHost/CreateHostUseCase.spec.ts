@@ -6,14 +6,18 @@ import {
   getHostsByGroupIDSpy,
   clearHostList,
 } from '../../mocks/CreateHostAdapterMock';
+import { ValidateRequestHostDataUseCase } from '../validateRequestHostData/ValidateRequestHostDataUseCase';
 import { IRequest, CreateHostUseCase } from './CreateHostUseCase';
 
 describe('Create Host', () => {
-  const createHostMock = new CreateHostUseCase({
-    create: createHostSpy,
-    getHostGroupByName: getHostGroupByNameSpy,
-    getHostsByGroupID: getHostsByGroupIDSpy,
-  });
+  const createHostMock = new CreateHostUseCase(
+    {
+      create: createHostSpy,
+      getHostGroupByName: getHostGroupByNameSpy,
+      getHostsByGroupID: getHostsByGroupIDSpy,
+    },
+    new ValidateRequestHostDataUseCase(),
+  );
 
   beforeEach(() => {
     clearHostList();
@@ -35,57 +39,65 @@ describe('Create Host', () => {
   });
 
   it('should not be possible to register a new host with an empty code', async () => {
-    await expect(
-      createHostMock.execute({
-        codigo: '',
-        sigla: 'TST',
-        nome_host: 'EMPTY CODE',
-        ip: '10.0.0.1',
-        tipo: 'switch',
-      }),
-    ).rejects.toEqual(new AppError('Formato do código inválido.'));
+    const hostEmptyCode = {
+      codigo: '',
+      sigla: 'TST',
+      nome_host: 'EMPTY CODE',
+      ip: '10.0.0.1',
+      tipo: 'switch',
+    } as IRequest;
+
+    await expect(createHostMock.execute(hostEmptyCode)).rejects.toEqual(
+      new AppError(`Formato do código "${hostEmptyCode.codigo}" inválido.`),
+    );
 
     expect(createHostSpy).not.toBeCalled();
   });
 
   it('should not be able to register a new host with an invalid code', async () => {
-    await expect(
-      createHostMock.execute({
-        codigo: '123',
-        sigla: 'TST',
-        nome_host: 'INVALID CODE',
-        ip: '10.0.0.1',
-        tipo: 'switch',
-      }),
-    ).rejects.toEqual(new AppError('Formato do código inválido.'));
+    const hostInvalidCode = {
+      codigo: '123',
+      sigla: 'TST',
+      nome_host: 'INVALID CODE',
+      ip: '10.0.0.1',
+      tipo: 'switch',
+    } as IRequest;
+
+    await expect(createHostMock.execute(hostInvalidCode)).rejects.toEqual(
+      new AppError(`Formato do código "${hostInvalidCode.codigo}" inválido.`),
+    );
 
     expect(createHostSpy).not.toBeCalled();
   });
 
   it('should not be possible to register a new host with the empty initial', async () => {
-    await expect(
-      createHostMock.execute({
-        codigo: '12345',
-        sigla: '',
-        nome_host: 'EMPTY INITIAL',
-        ip: '10.0.0.1',
-        tipo: 'switch',
-      }),
-    ).rejects.toEqual(new AppError('Formato da sigla inválido.'));
+    const hostEmptyInitial = {
+      codigo: '12345',
+      sigla: '',
+      nome_host: 'EMPTY INITIAL',
+      ip: '10.0.0.1',
+      tipo: 'switch',
+    } as IRequest;
+
+    await expect(createHostMock.execute(hostEmptyInitial)).rejects.toEqual(
+      new AppError(`Formato da sigla "${hostEmptyInitial.sigla}" inválido.`),
+    );
 
     expect(createHostSpy).not.toBeCalled();
   });
 
   it('should not be able to create a new host with the invalid initial', async () => {
-    await expect(
-      createHostMock.execute({
-        codigo: '12345',
-        sigla: '"',
-        nome_host: 'INVALID INITIAL',
-        ip: '10.0.0.1',
-        tipo: 'switch',
-      }),
-    ).rejects.toEqual(new AppError('Formato da sigla inválido.'));
+    const hostInvalidInitial = {
+      codigo: '12345',
+      sigla: 'TESTE',
+      nome_host: 'INVALID INITIAL',
+      ip: '10.0.0.1',
+      tipo: 'switch',
+    } as IRequest;
+
+    await expect(createHostMock.execute(hostInvalidInitial)).rejects.toEqual(
+      new AppError(`Formato da sigla "${hostInvalidInitial.sigla}" inválido.`),
+    );
 
     expect(getHostGroupByNameSpy).not.toBeCalled();
     expect(createHostSpy).not.toBeCalled();
@@ -120,29 +132,33 @@ describe('Create Host', () => {
   });
 
   it('should not be able to create a new host with the invalid host name', async () => {
-    await expect(
-      createHostMock.execute({
-        codigo: '12345',
-        sigla: 'TST',
-        nome_host: 'INVALID @ HOST NAME.',
-        ip: '10.0.0.1',
-        tipo: 'switch',
-      }),
-    ).rejects.toEqual(new AppError('Nome do host inválido!'));
+    const invalidHostName = {
+      codigo: '12345',
+      sigla: 'TST',
+      nome_host: 'INVALID @ HOST NAME.',
+      ip: '10.0.0.1',
+      tipo: 'switch',
+    } as IRequest;
+
+    await expect(createHostMock.execute(invalidHostName)).rejects.toEqual(
+      new AppError(`Nome do host "${invalidHostName.nome_host}" é inválido.`),
+    );
 
     expect(createHostSpy).not.toBeCalled();
   });
 
   it('should not be able to create a new host with the invalid ip address', async () => {
-    await expect(
-      createHostMock.execute({
-        codigo: '12345',
-        sigla: 'TST',
-        nome_host: 'INVALID IP ADDRESS',
-        ip: '10.0.0.256',
-        tipo: 'switch',
-      }),
-    ).rejects.toEqual(new AppError('Formato de IP inválido.'));
+    const hostInvalidIPAddress = {
+      codigo: '12345',
+      sigla: 'TST',
+      nome_host: 'INVALID IP ADDRESS',
+      ip: '10.0.0.256',
+      tipo: 'switch',
+    } as IRequest;
+
+    await expect(createHostMock.execute(hostInvalidIPAddress)).rejects.toEqual(
+      new AppError(`Formato do IP "${hostInvalidIPAddress.ip}" inválido.`),
+    );
 
     expect(getHostGroupByNameSpy).not.toBeCalled();
     expect(createHostSpy).not.toBeCalled();
