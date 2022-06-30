@@ -4,17 +4,8 @@ import { AppError } from '../../../../errors/AppError';
 import patterns from '../../../../utils/patterns';
 import checks from '../../../../utils/validate';
 import { ICreateHostAdapter } from '../../adapters/ICreateHostAdapter';
-
-const hostTypes = [
-  'olt',
-  'switch',
-  'router',
-  'wireless',
-  'server',
-  'pop',
-] as const;
-
-type HostType = typeof hostTypes[number];
+import { HostType } from '../../types/hostTypes';
+import { ValidateRequestHostDataUseCase } from '../validateRequestHostData/ValidateRequestHostDataUseCase';
 
 export interface IRequest {
   codigo: string;
@@ -36,6 +27,8 @@ export class CreateHostUseCase {
   constructor(
     @inject('CreateHostAdapter')
     private createHostAdapter: ICreateHostAdapter,
+    @inject('ValidateRequestHostData')
+    private validateRequestHostData: ValidateRequestHostDataUseCase,
   ) {}
 
   async execute(data: IRequest): Promise<void> {
@@ -60,35 +53,13 @@ export class CreateHostUseCase {
     sigla,
     tipo,
   }: IRequest): Promise<IValidatedData> {
-    if (tipo) {
-      const validType = hostTypes.some(hostType => hostType === tipo);
-
-      if (!validType) {
-        throw new AppError(
-          `Tipo de host inválido, são aceitos apenas: ${hostTypes.join(', ')}`,
-        );
-      }
-    }
-
-    if (!nome_host) {
-      throw new AppError('O nome do host é obrigatório!');
-    }
-
-    if (!ip) {
-      throw new AppError('O ip é obrigatório!');
-    }
-
-    if (!checks.validIpAddress(ip)) {
-      throw new AppError('Formato de IP inválido.');
-    }
-
-    if (!checks.validateCode(codigo)) {
-      throw new AppError('Formato do código inválido.');
-    }
-
-    if (!checks.validateInitial(sigla)) {
-      throw new AppError('Formato da sigla inválido.');
-    }
+    this.validateRequestHostData.execute({
+      codigo,
+      sigla,
+      nome_host,
+      ip,
+      tipo,
+    });
 
     const { groupName, groupId } =
       await this.createHostAdapter.getHostGroupByName(sigla);
@@ -99,7 +70,7 @@ export class CreateHostUseCase {
       name: nome_host,
     });
 
-    if (!checks.validHostName(hostName)) {
+    if (!checks.validFormattedHostName(hostName)) {
       throw new AppError('Nome do host inválido!');
     }
 

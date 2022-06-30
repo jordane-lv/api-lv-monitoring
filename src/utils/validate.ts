@@ -5,12 +5,11 @@ const reInitials = '[A-Z]{3}(?:\\s?-\\s?[A-Z]{3})?';
 const reName = '[A-Z0-9\\s-]+';
 
 export default {
-  validHostName: (hostName: string): boolean => {
+  validFormattedHostName: (hostName: string): boolean => {
     const reHostName = new RegExp(
       `^${reCode}\\s${reInitials}\\s-\\s${reName}$`,
       'gm',
     );
-
     return reHostName.test(hostName);
   },
   validIpAddress: (ipAddress: string): boolean => {
@@ -23,5 +22,9 @@ export default {
   validateInitial: (initial: string): boolean => {
     const re = new RegExp(`^${reInitials}$`, 'gm');
     return re.test(initial);
+  },
+  validHostName: (hostName: string): boolean => {
+    const re = new RegExp(`^${reName}$`, 'gm');
+    return re.test(hostName);
   },
 };

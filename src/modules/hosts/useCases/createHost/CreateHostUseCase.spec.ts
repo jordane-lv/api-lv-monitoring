@@ -6,14 +6,18 @@ import {
   getHostsByGroupIDSpy,
   clearHostList,
 } from '../../mocks/CreateHostAdapterMock';
+import { ValidateRequestHostDataUseCase } from '../validateRequestHostData/ValidateRequestHostDataUseCase';
 import { IRequest, CreateHostUseCase } from './CreateHostUseCase';
 
 describe('Create Host', () => {
-  const createHostMock = new CreateHostUseCase({
-    create: createHostSpy,
-    getHostGroupByName: getHostGroupByNameSpy,
-    getHostsByGroupID: getHostsByGroupIDSpy,
-  });
+  const createHostMock = new CreateHostUseCase(
+    {
+      create: createHostSpy,
+      getHostGroupByName: getHostGroupByNameSpy,
+      getHostsByGroupID: getHostsByGroupIDSpy,
+    },
+    new ValidateRequestHostDataUseCase(),
+  );
 
   beforeEach(() => {
     clearHostList();
@@ -120,15 +124,17 @@ describe('Create Host', () => {
   });
 
   it('should not be able to create a new host with the invalid host name', async () => {
-    await expect(
-      createHostMock.execute({
-        codigo: '12345',
-        sigla: 'TST',
-        nome_host: 'INVALID @ HOST NAME.',
-        ip: '10.0.0.1',
-        tipo: 'switch',
-      }),
-    ).rejects.toEqual(new AppError('Nome do host inválido!'));
+    const invalidHostName = {
+      codigo: '12345',
+      sigla: 'TST',
+      nome_host: 'INVALID @ HOST NAME.',
+      ip: '10.0.0.1',
+      tipo: 'switch',
+    } as IRequest;
+
+    await expect(createHostMock.execute(invalidHostName)).rejects.toEqual(
+      new AppError(`Nome do host "${invalidHostName.nome_host}" é inválido.`),
+    );
 
     expect(createHostSpy).not.toBeCalled();
   });
