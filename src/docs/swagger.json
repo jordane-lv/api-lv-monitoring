@@ -186,6 +186,74 @@
           }
         }
       }
+    },
+    "/groups": {
+      "post": {
+        "tags": ["Grupos"],
+        "summary": "Cria novos grupos",
+        "description": "Criar novos grupos de host e usuário",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/CreateGroups"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Grupos Criados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "hostGroupId": {
+                      "type": "string"
+                    },
+                    "userGroupId": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "hostGroupId": "5432",
+                    "userGroupId": "4523"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A sigla enviada pode estar com formato inválido.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "message": "Nome do grupo inválido."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno da aplicação.",
+            "content": {
+              "application/json": {
+                "schema": {            
+                  "$ref": "#/errors/InternalErrors"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -236,6 +304,17 @@
         "codigo": "12345",
         "sigla": "EXP",
         "nome_mapa": "MAPA DE EXEMPLO"
+      }
+    },
+    "CreateGroups": {
+      "type": "object",
+      "properties": {
+        "sigla": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "sigla": "EXP"
       }
     }
   },
