@@ -1,5 +1,7 @@
 import { container } from 'tsyringe';
 
+import { ICreateGroupsAdapter } from '../../modules/groups/adapters/ICreateGroupsAdapter';
+import { ZabbixCreateGroupsAdapter } from '../../modules/groups/adapters/zabbix/ZabbixCreateGroupsAdapter';
 import { ICreateHostAdapter } from '../../modules/hosts/adapters/ICreateHostAdapter';
 import { ZabbixCreateHostAdapter } from '../../modules/hosts/adapters/zabbix/ZabbixCreateHostAdapter';
 import { ValidateRequestHostDataUseCase } from '../../modules/hosts/useCases/validateRequestHostData/ValidateRequestHostDataUseCase';
@@ -25,4 +27,9 @@ container.register<ValidateRequestHostDataUseCase>(
 container.register<ValidateRequestMapDataUseCase>(
   'ValidateRequestMapData',
   ValidateRequestMapDataUseCase,
+);
+
+container.register<ICreateGroupsAdapter>(
+  'CreateGroupsAdapter',
+  ZabbixCreateGroupsAdapter,
 );
