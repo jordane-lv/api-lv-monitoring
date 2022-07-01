@@ -22,6 +22,11 @@ export class CreateGroupsUseCase {
     }
 
     const hostGroup = await this.createGroupsAdapter.createHostGroup(groupName);
+
+    if (!hostGroup || !hostGroup.groupId) {
+      throw new AppError('Não foi possível obter o ID do grupo de hosts.');
+    }
+
     const hostGroupId = hostGroup.groupId;
 
     const userGroup = await this.createGroupsAdapter.createUserGroup({
