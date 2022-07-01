@@ -16,13 +16,11 @@ const createHostGroupMock = jest.fn(
 );
 const createUserGroupMock = jest.fn(
   async (data: ICreateUserGroupData): Promise<ICreateGroupResponse> => {
-    if (!data) {
-      return null;
-    }
-
-    return {
-      groupId: 'Teste ID grupo de usuários',
-    };
+    return (
+      data && {
+        groupId: 'Teste ID grupo de usuários',
+      }
+    );
   },
 );
 

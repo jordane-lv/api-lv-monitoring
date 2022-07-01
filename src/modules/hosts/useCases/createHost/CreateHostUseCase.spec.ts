@@ -32,7 +32,7 @@ describe('Create Host', () => {
         ip: '10.0.0.1',
         tipo: 'switch',
       }),
-    ).resolves.not.toThrow();
+    ).resolves.not.toBeInstanceOf(AppError);
 
     expect(getHostGroupByNameSpy).toBeCalled();
     expect(createHostSpy).toBeCalled();
@@ -47,8 +47,8 @@ describe('Create Host', () => {
       tipo: 'switch',
     } as IRequest;
 
-    await expect(createHostMock.execute(hostEmptyCode)).rejects.toEqual(
-      new AppError(`Formato do código "${hostEmptyCode.codigo}" inválido.`),
+    await expect(createHostMock.execute(hostEmptyCode)).rejects.toBeInstanceOf(
+      AppError,
     );
 
     expect(createHostSpy).not.toBeCalled();
@@ -63,9 +63,9 @@ describe('Create Host', () => {
       tipo: 'switch',
     } as IRequest;
 
-    await expect(createHostMock.execute(hostInvalidCode)).rejects.toEqual(
-      new AppError(`Formato do código "${hostInvalidCode.codigo}" inválido.`),
-    );
+    await expect(
+      createHostMock.execute(hostInvalidCode),
+    ).rejects.toBeInstanceOf(AppError);
 
     expect(createHostSpy).not.toBeCalled();
   });
@@ -79,9 +79,9 @@ describe('Create Host', () => {
       tipo: 'switch',
     } as IRequest;
 
-    await expect(createHostMock.execute(hostEmptyInitial)).rejects.toEqual(
-      new AppError(`Formato da sigla "${hostEmptyInitial.sigla}" inválido.`),
-    );
+    await expect(
+      createHostMock.execute(hostEmptyInitial),
+    ).rejects.toBeInstanceOf(AppError);
 
     expect(createHostSpy).not.toBeCalled();
   });
@@ -95,9 +95,9 @@ describe('Create Host', () => {
       tipo: 'switch',
     } as IRequest;
 
-    await expect(createHostMock.execute(hostInvalidInitial)).rejects.toEqual(
-      new AppError(`Formato da sigla "${hostInvalidInitial.sigla}" inválido.`),
-    );
+    await expect(
+      createHostMock.execute(hostInvalidInitial),
+    ).rejects.toBeInstanceOf(AppError);
 
     expect(getHostGroupByNameSpy).not.toBeCalled();
     expect(createHostSpy).not.toBeCalled();
@@ -112,7 +112,7 @@ describe('Create Host', () => {
         ip: '10.0.0.1',
         tipo: 'switch',
       }),
-    ).rejects.toEqual(new AppError('O nome do host é obrigatório!'));
+    ).rejects.toBeInstanceOf(AppError);
 
     expect(createHostSpy).not.toBeCalled();
   });
@@ -126,7 +126,7 @@ describe('Create Host', () => {
         ip: '',
         tipo: 'switch',
       }),
-    ).rejects.toEqual(new AppError('O ip é obrigatório!'));
+    ).rejects.toBeInstanceOf(AppError);
 
     expect(createHostSpy).not.toBeCalled();
   });
@@ -140,9 +140,9 @@ describe('Create Host', () => {
       tipo: 'switch',
     } as IRequest;
 
-    await expect(createHostMock.execute(invalidHostName)).rejects.toEqual(
-      new AppError(`Nome do host "${invalidHostName.nome_host}" é inválido.`),
-    );
+    await expect(
+      createHostMock.execute(invalidHostName),
+    ).rejects.toBeInstanceOf(AppError);
 
     expect(createHostSpy).not.toBeCalled();
   });
@@ -156,9 +156,9 @@ describe('Create Host', () => {
       tipo: 'switch',
     } as IRequest;
 
-    await expect(createHostMock.execute(hostInvalidIPAddress)).rejects.toEqual(
-      new AppError(`Formato do IP "${hostInvalidIPAddress.ip}" inválido.`),
-    );
+    await expect(
+      createHostMock.execute(hostInvalidIPAddress),
+    ).rejects.toBeInstanceOf(AppError);
 
     expect(getHostGroupByNameSpy).not.toBeCalled();
     expect(createHostSpy).not.toBeCalled();
@@ -183,9 +183,9 @@ describe('Create Host', () => {
 
     hostDuplicateTest.ip = '10.0.0.6';
 
-    await expect(createHostMock.execute(hostDuplicateTest)).rejects.toEqual(
-      new AppError(`O host com nome ${hostNamePattern} já existe.`),
-    );
+    await expect(
+      createHostMock.execute(hostDuplicateTest),
+    ).rejects.toBeInstanceOf(AppError);
   });
 
   it('should not be possible to register a host with an existing IP', async () => {
@@ -207,6 +207,6 @@ describe('Create Host', () => {
         ip: existingIpAddress,
         tipo: 'switch',
       }),
-    ).rejects.toEqual(new AppError(`O IP ${existingIpAddress} já existe.`));
+    ).rejects.toBeInstanceOf(AppError);
   });
 });

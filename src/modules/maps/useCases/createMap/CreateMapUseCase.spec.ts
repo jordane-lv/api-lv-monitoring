@@ -1,6 +1,5 @@
 import { AppError } from '../../../../errors/AppError';
 import patterns from '../../../../utils/patterns';
-import { IRequest } from '../../../hosts/useCases/createHost/CreateHostUseCase';
 import {
   createMapSpy,
   getAllHostsByHostGroupIdSpy,
@@ -30,7 +29,7 @@ describe('Create Map', () => {
         sigla: 'TST',
         mapName: 'SUCCESS TEST',
       }),
-    ).resolves.not.toThrow();
+    ).resolves.not.toBeInstanceOf(AppError);
 
     expect(createMapSpy).toBeCalled();
   });
@@ -42,9 +41,9 @@ describe('Create Map', () => {
       mapName: 'INVALID CODE TEST',
     };
 
-    await expect(createMapUseCase.execute(mapInvalidCode)).rejects.toEqual(
-      new AppError(`Formato do código "${mapInvalidCode.codigo}" inválido.`),
-    );
+    await expect(
+      createMapUseCase.execute(mapInvalidCode),
+    ).rejects.toBeInstanceOf(AppError);
 
     expect(getHostGroupByNameSpy).not.toBeCalled();
     expect(getUserGroupByNameSpy).not.toBeCalled();
@@ -59,9 +58,9 @@ describe('Create Map', () => {
       mapName: 'INVALID INITIAL',
     };
 
-    await expect(createMapUseCase.execute(mapInvalidInitial)).rejects.toEqual(
-      new AppError(`Formato da sigla "${mapInvalidInitial.sigla}" inválido.`),
-    );
+    await expect(
+      createMapUseCase.execute(mapInvalidInitial),
+    ).rejects.toBeInstanceOf(AppError);
 
     expect(getHostGroupByNameSpy).not.toBeCalled();
     expect(getUserGroupByNameSpy).not.toBeCalled();
@@ -76,7 +75,7 @@ describe('Create Map', () => {
         sigla: 'TST',
         mapName: '',
       }),
-    ).rejects.toEqual(new AppError('O nome do mapa é obrigatório!'));
+    ).rejects.toBeInstanceOf(AppError);
 
     expect(createMapSpy).not.toBeCalled();
   });
@@ -96,8 +95,8 @@ describe('Create Map', () => {
 
     await createMapUseCase.execute(existingMap);
 
-    await expect(createMapUseCase.execute(existingMap)).rejects.toEqual(
-      new AppError(`O mapa com nome ${mapNamePattern} já existe.`),
+    await expect(createMapUseCase.execute(existingMap)).rejects.toBeInstanceOf(
+      AppError,
     );
 
     expect(getAllHostsByHostGroupIdSpy).not.toBeCalledTimes(2);
@@ -111,9 +110,7 @@ describe('Create Map', () => {
         sigla: 'TST',
         mapName: 'WITHOUT HOSTS',
       }),
-    ).rejects.toEqual(
-      new AppError('Não existem hosts cadastrados com o mesmo código do mapa.'),
-    );
+    ).rejects.toBeInstanceOf(AppError);
 
     expect(createMapSpy).not.toBeCalled();
   });

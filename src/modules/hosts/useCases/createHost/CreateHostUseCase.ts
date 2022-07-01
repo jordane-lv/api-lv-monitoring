@@ -70,10 +70,6 @@ export class CreateHostUseCase {
       name: nome_host,
     });
 
-    if (!checks.validFormattedHostName(hostName)) {
-      throw new AppError('Nome do host inválido!');
-    }
-
     const hosts = await this.createHostAdapter.getHostsByGroupID(groupId);
 
     if (hosts) {
