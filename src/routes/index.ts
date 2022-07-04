@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { MassCreateController } from '../modules/mass/useCases/MassCreateController';
+import { MassCreateController } from '../modules/mass/useCases/massCreate/MassCreateController';
 import { groupsRoutes } from './groups.routes';
 import { hostsRoutes } from './hosts.routes';
 import { mapsRoutes } from './maps.routes';
