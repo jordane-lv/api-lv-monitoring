@@ -6,6 +6,7 @@ import { CreateHostUseCase } from '../../../hosts/useCases/createHost/CreateHost
 import { CreateMapUseCase } from '../../../maps/useCases/createMap/CreateMapUseCase';
 
 type ResponseStatus = {
+  type: string;
   message: string;
   statusCode?: number;
 };
@@ -49,6 +50,7 @@ export class MassCreateUseCase {
       }
 
       mapas[index].status = {
+        type: 'error',
         message: 'Não foi criado, pois não existem hosts neste mapa.',
       };
 
@@ -70,9 +72,17 @@ export class MassCreateUseCase {
 
         try {
           await this.createHost.execute(newHost);
-          host.status.message = 'Criado';
+
+          host.status = {
+            type: 'ok',
+            message: 'Criado',
+          };
         } catch (error) {
-          host.status = error;
+          host.status = {
+            type: 'error',
+            message: error.message,
+            statusCode: error.statusCode,
+          };
         }
       }
 
@@ -80,9 +90,17 @@ export class MassCreateUseCase {
 
       try {
         await this.createMap.execute(newMap);
-        mapa.status.message = 'Criado';
+
+        mapa.status = {
+          type: 'ok',
+          message: 'Criado',
+        };
       } catch (error) {
-        mapa.status = error;
+        mapa.status = {
+          type: 'error',
+          message: error.message,
+          statusCode: error.statusCode,
+        };
       }
     }
 
