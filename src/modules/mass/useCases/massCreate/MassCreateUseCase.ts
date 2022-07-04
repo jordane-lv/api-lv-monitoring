@@ -5,23 +5,22 @@ import { HostType } from '../../../hosts/types/hostTypes';
 import { CreateHostUseCase } from '../../../hosts/useCases/createHost/CreateHostUseCase';
 import { CreateMapUseCase } from '../../../maps/useCases/createMap/CreateMapUseCase';
 
+type ResponseStatus = {
+  message: string;
+  statusCode?: number;
+};
+
 interface IHost {
   nome_host: string;
   ip: string;
   tipo: HostType;
-  status?: {
-    message: string;
-    statusCode?: number;
-  };
+  status?: ResponseStatus;
 }
 
 interface IMap {
   nome_mapa: string;
   hosts: IHost[];
-  status: {
-    message: string;
-    statusCode?: number;
-  };
+  status?: ResponseStatus;
 }
 
 export interface IMassCreateData {
