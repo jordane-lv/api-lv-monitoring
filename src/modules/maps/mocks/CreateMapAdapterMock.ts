@@ -2,16 +2,26 @@ import {
   IHostResponse,
   IMapResponse,
   ICreateMapData,
+  ICreateMapResponse,
 } from '../adapters/ICreateMapAdapter';
 
 const maps: IMapResponse[] = [];
 
-const createMapSpy = jest.fn(async (data: ICreateMapData) => {
-  maps.push({
-    mapId: `${data.name} - ID MAP`,
-    mapName: data.name,
-  });
-});
+const createMapSpy = jest.fn(
+  async ({ name }: ICreateMapData): Promise<ICreateMapResponse> => {
+    const map = {
+      mapId: `${name} - ID MAP`,
+      mapName: name,
+    };
+
+    maps.push(map);
+
+    return {
+      name,
+      mapId: map.mapId,
+    };
+  },
+);
 
 const getHostGroupByNameSpy = jest.fn(async (groupName: string) => {
   const group = { groupId: 'teste', groupName: 'TST' };

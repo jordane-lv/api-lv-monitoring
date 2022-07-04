@@ -19,11 +19,11 @@ interface IResponse {
   hostId: string;
 }
 
-interface IValidatedData {
+interface IValidatedDataResponse {
   name: string;
   ipAddress: string;
   type: HostType;
-  groupId: string;
+  hostGroupId: string;
 }
 
 @injectable()
@@ -36,16 +36,15 @@ export class CreateHostUseCase {
   ) {}
 
   async execute(data: IRequest): Promise<IResponse> {
-    const { name, ipAddress, type, groupId } = await this.validateRequestData(
-      data,
-    );
+    const { name, ipAddress, type, hostGroupId } =
+      await this.validateRequestData(data);
 
     const createdHost = await this.createHostAdapter.create({
       name,
       ipAddress,
       type,
       hostGroup: {
-        groupId,
+        groupId: hostGroupId,
       },
     });
 
@@ -61,7 +60,7 @@ export class CreateHostUseCase {
     nome_host,
     sigla,
     tipo,
-  }: IRequest): Promise<IValidatedData> {
+  }: IRequest): Promise<IValidatedDataResponse> {
     this.validateRequestHostData.execute({
       codigo,
       sigla,
@@ -101,7 +100,7 @@ export class CreateHostUseCase {
       name: hostName,
       ipAddress: ip,
       type: tipo,
-      groupId,
+      hostGroupId: groupId,
     };
   }
 }
