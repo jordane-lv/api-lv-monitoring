@@ -9,11 +9,19 @@ interface IHost {
   nome_host: string;
   ip: string;
   tipo: HostType;
+  status?: {
+    message: string;
+    statusCode?: number;
+  };
 }
 
 interface IMap {
   nome_mapa: string;
   hosts: IHost[];
+  status: {
+    message: string;
+    statusCode?: number;
+  };
 }
 
 export interface IMassCreateData {
@@ -33,10 +41,20 @@ export class MassCreateUseCase {
     private createMap: CreateMapUseCase,
   ) {}
 
-  async execute(data: IMassCreateData): Promise<void> {
+  async execute(data: IMassCreateData): Promise<IMassCreateData> {
     const { codigo, sigla, mapas } = data;
 
-    const mapsWithHosts = mapas.filter(mapa => mapa.hosts.length > 0);
+    const mapsWithHosts = mapas.filter((mapa, index) => {
+      if (mapa.hosts.length > 0) {
+        return true;
+      }
+
+      mapas[index].status = {
+        message: 'Não foi criado, pois não existem hosts neste mapa.',
+      };
+
+      return false;
+    });
 
     await this.createGroups.execute(sigla);
 
@@ -50,13 +68,25 @@ export class MassCreateUseCase {
 
         const newHost = { codigo: mapCode, sigla, nome_host, ip, tipo };
 
-        await this.createHost.execute(newHost);
+        try {
+          await this.createHost.execute(newHost);
+          host.status.message = 'Criado';
+        } catch (error) {
+          host.status = error;
+        }
       }
 
       const newMap = { codigo: mapCode, sigla, mapName };
 
-      await this.createMap.execute(newMap);
+      try {
+        await this.createMap.execute(newMap);
+        mapa.status.message = 'Criado';
+      } catch (error) {
+        mapa.status = error;
+      }
     }
+
+    return data;
   }
 
   private getSubmapCode(code: string, index: number): string {

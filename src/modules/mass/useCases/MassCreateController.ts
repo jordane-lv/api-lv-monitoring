@@ -9,8 +9,8 @@ export class MassCreateController {
 
     const massCreateUseCase = container.resolve(MassCreateUseCase);
 
-    await massCreateUseCase.execute(data);
+    const createdData = await massCreateUseCase.execute(data);
 
-    return response.status(201).send();
+    return response.status(201).json(createdData);
   }
 }
