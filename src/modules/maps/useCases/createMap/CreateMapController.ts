@@ -9,12 +9,12 @@ export class CreateMapController {
 
     const createMapUseCase = container.resolve(CreateMapUseCase);
 
-    await createMapUseCase.execute({
+    const createdMap = await createMapUseCase.execute({
       codigo,
       sigla,
       mapName: nome_mapa,
     });
 
-    return response.status(201).send();
+    return response.status(201).json(createdMap);
   }
 }

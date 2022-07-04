@@ -2,7 +2,6 @@ import { inject, injectable } from 'tsyringe';
 
 import { AppError } from '../../../../errors/AppError';
 import patterns from '../../../../utils/patterns';
-import checks from '../../../../utils/validate';
 import { ICreateHostAdapter } from '../../adapters/ICreateHostAdapter';
 import { HostType } from '../../types/hostTypes';
 import { ValidateRequestHostDataUseCase } from '../validateRequestHostData/ValidateRequestHostDataUseCase';
@@ -13,6 +12,11 @@ export interface IRequest {
   nome_host: string;
   ip: string;
   tipo?: HostType;
+}
+
+interface IResponse {
+  name: string;
+  hostId: string;
 }
 
 interface IValidatedData {
@@ -31,12 +35,12 @@ export class CreateHostUseCase {
     private validateRequestHostData: ValidateRequestHostDataUseCase,
   ) {}
 
-  async execute(data: IRequest): Promise<void> {
+  async execute(data: IRequest): Promise<IResponse> {
     const { name, ipAddress, type, groupId } = await this.validateRequestData(
       data,
     );
 
-    await this.createHostAdapter.create({
+    const createdHost = await this.createHostAdapter.create({
       name,
       ipAddress,
       type,
@@ -44,6 +48,11 @@ export class CreateHostUseCase {
         groupId,
       },
     });
+
+    return {
+      name: createdHost.name,
+      hostId: createdHost.hostId,
+    };
   }
 
   async validateRequestData({

@@ -9,7 +9,7 @@ export class CreateHostController {
 
     const createHostUseCase = container.resolve(CreateHostUseCase);
 
-    await createHostUseCase.execute({
+    const createdHost = await createHostUseCase.execute({
       codigo,
       sigla,
       ip,
@@ -17,6 +17,6 @@ export class CreateHostController {
       tipo,
     });
 
-    return response.status(201).send();
+    return response.status(201).json(createdHost);
   }
 }

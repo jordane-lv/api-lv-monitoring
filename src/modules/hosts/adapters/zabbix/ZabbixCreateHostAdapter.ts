@@ -4,6 +4,7 @@ import {
   IHostGroupResponse,
   ICreateHostAdapter,
   ICreateHostData,
+  ICreateHostResponse,
   IHostResponse,
 } from '../ICreateHostAdapter';
 
@@ -20,7 +21,7 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
     ipAddress,
     type,
     hostGroup,
-  }: ICreateHostData): Promise<void> {
+  }: ICreateHostData): Promise<ICreateHostResponse> {
     try {
       const { groupId } = hostGroup;
 
@@ -61,6 +62,13 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
       if (data.error) {
         throw new AppError(data.error.data);
       }
+
+      const { hostids } = data.result;
+
+      return {
+        name,
+        hostId: hostids[0],
+      };
     } catch (error) {
       throw new AppError(error.message);
     }

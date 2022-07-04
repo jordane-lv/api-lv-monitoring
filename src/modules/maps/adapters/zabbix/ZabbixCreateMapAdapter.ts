@@ -3,6 +3,7 @@ import { ZabbixApi } from '../../../../services/zabbix-api';
 import {
   ICreateMapAdapter,
   ICreateMapData,
+  ICreateMapResponse,
   IHostResponse,
   IGroupResponse,
   IMapResponse,
@@ -11,7 +12,11 @@ import {
 const api = new ZabbixApi();
 
 export class ZabbixCreateMapAdapter implements ICreateMapAdapter {
-  async create({ name, hosts, userGroup }: ICreateMapData): Promise<void> {
+  async create({
+    name,
+    hosts,
+    userGroup,
+  }: ICreateMapData): Promise<ICreateMapResponse> {
     try {
       const selements = hosts.map((host, index) => {
         return {
@@ -60,6 +65,13 @@ export class ZabbixCreateMapAdapter implements ICreateMapAdapter {
       if (data.error) {
         throw new AppError(data.error.data);
       }
+
+      const { sysmapids } = data.result;
+
+      return {
+        name,
+        mapId: sysmapids[0],
+      };
     } catch (error) {
       throw new AppError(error.message);
     }
