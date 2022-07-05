@@ -116,11 +116,11 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
     }
   }
 
-  async getHostsByGroupID(groupId: string): Promise<IHostResponse[]> {
+  async getHostsByGroupID(hostGroupId: string): Promise<IHostResponse[]> {
     try {
       const params = {
         output: ['hostid', 'host', 'name'],
-        groupids: [groupId],
+        groupids: hostGroupId,
         selectInterfaces: ['ip'],
       };
 

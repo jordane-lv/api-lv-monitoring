@@ -27,5 +27,5 @@ export interface IHostResponse {
 export interface ICreateHostAdapter {
   create(data: ICreateHostData): Promise<ICreateHostResponse>;
   getHostGroupByName(groupName: string): Promise<IHostGroupResponse>;
-  getHostsByGroupID(groupId: string): Promise<IHostResponse[]>;
+  getHostsByGroupID(hostGroupId: string): Promise<IHostResponse[]>;
 }

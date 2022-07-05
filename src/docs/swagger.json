@@ -115,6 +115,86 @@
         }
       }
     },
+    "/hosts/{sigla}": {
+      "get": {
+        "tags": ["Host"],
+        "summary": "Lista os hosts.",
+        "description": "Lista todos os hosts do grupo especificado.",
+        "parameters": [
+          {
+            "name": "sigla",
+            "in": "path",
+            "description": "Sigla do grupo para localizar os hosts.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "hosts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "hostId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "interfaces": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "ip": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "example": {
+                    "hosts": [
+                      {
+                        "hostId": "4321",
+                        "name": "12345 EXP - EXEMPLO",
+                        "interfaces": [
+                          {
+                            "ip": "10.0.0.1"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno da aplicação.",
+            "content": {
+              "application/json": {
+                "schema": {            
+                  "$ref": "#/errors/InternalErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/maps": {
       "post": {
         "tags": ["Mapa"],
@@ -218,6 +298,70 @@
                   "example": {
                     "message": "O nome do mapa \"EX@AMPLE\" está incorreto."
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/maps/{sigla}": {
+      "get": {
+        "tags": ["Mapa"],
+        "summary": "Lista os mapas.",
+        "description": "Lista todos os mapas do grupo especificado.",
+        "parameters": [
+          {
+            "name": "sigla",
+            "in": "path",
+            "description": "Sigla do grupo para localizar os mapas.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "maps": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "mapId": {
+                            "type": "string"
+                          },
+                          "mapName": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "example": {
+                    "maps": [
+                      {
+                        "mapId": "4321",
+                        "mapName": "12345 - EXP | MAPA DE EXEMPLO"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno da aplicação.",
+            "content": {
+              "application/json": {
+                "schema": {            
+                  "$ref": "#/errors/InternalErrors"
                 }
               }
             }
