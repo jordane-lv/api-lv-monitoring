@@ -9,9 +9,13 @@ import {
   IMapResponse,
 } from '../ICreateMapAdapter';
 
-const api = new ZabbixApi();
-
 export class ZabbixCreateMapAdapter implements ICreateMapAdapter {
+  private api: ZabbixApi;
+
+  constructor() {
+    this.api = new ZabbixApi();
+  }
+
   async create({
     name,
     hosts,
@@ -58,7 +62,7 @@ export class ZabbixCreateMapAdapter implements ICreateMapAdapter {
 
       const method = 'map.create';
 
-      const response = await api.execute({ method, params });
+      const response = await this.api.execute({ method, params });
 
       const { data } = response;
 
@@ -89,7 +93,7 @@ export class ZabbixCreateMapAdapter implements ICreateMapAdapter {
 
       const method = 'usergroup.get';
 
-      const response = await api.execute({ method, params });
+      const response = await this.api.execute({ method, params });
 
       const { data } = response;
 
@@ -120,7 +124,7 @@ export class ZabbixCreateMapAdapter implements ICreateMapAdapter {
 
       const method = 'hostgroup.get';
 
-      const response = await api.execute({ method, params });
+      const response = await this.api.execute({ method, params });
 
       const { data } = response;
 
@@ -149,7 +153,7 @@ export class ZabbixCreateMapAdapter implements ICreateMapAdapter {
 
       const method = 'host.get';
 
-      const response = await api.execute({ method, params });
+      const response = await this.api.execute({ method, params });
 
       const { data } = response;
 
@@ -184,7 +188,7 @@ export class ZabbixCreateMapAdapter implements ICreateMapAdapter {
 
       const method = 'map.get';
 
-      const response = await api.execute({ method, params });
+      const response = await this.api.execute({ method, params });
 
       const { data } = response;
 

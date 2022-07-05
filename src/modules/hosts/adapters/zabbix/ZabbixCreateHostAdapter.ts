@@ -8,14 +8,18 @@ import {
   IHostResponse,
 } from '../ICreateHostAdapter';
 
-const api = new ZabbixApi();
-
 interface IHostGroupZabbixResponse {
   name: string;
   groupid: string;
 }
 
 export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
+  private api: ZabbixApi;
+
+  constructor() {
+    this.api = new ZabbixApi();
+  }
+
   async create({
     name,
     ipAddress,
@@ -55,7 +59,10 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
         },
       };
 
-      const response = await api.execute({ method: 'host.create', params });
+      const response = await this.api.execute({
+        method: 'host.create',
+        params,
+      });
 
       const { data } = response;
 
@@ -83,7 +90,10 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
         },
       };
 
-      const response = await api.execute({ method: 'hostgroup.get', params });
+      const response = await this.api.execute({
+        method: 'hostgroup.get',
+        params,
+      });
 
       const { data } = response;
 
@@ -114,7 +124,7 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
         selectInterfaces: ['ip'],
       };
 
-      const response = await api.execute({ method: 'host.get', params });
+      const response = await this.api.execute({ method: 'host.get', params });
 
       const { data } = response;
 
