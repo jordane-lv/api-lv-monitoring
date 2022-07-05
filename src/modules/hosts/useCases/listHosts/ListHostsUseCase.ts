@@ -1,5 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
+import { AppError } from '../../../../errors/AppError';
 import { ICreateHostAdapter } from '../../adapters/ICreateHostAdapter';
 
 interface IInterfaces {
@@ -20,9 +21,17 @@ export class ListHostsUseCase {
   ) {}
 
   async execute(hostGroupName: string): Promise<IResponse[]> {
+    if (!hostGroupName) {
+      throw new AppError('O nome do grupo é obrigatório.');
+    }
+
     const { groupId } = await this.createHostAdapter.getHostGroupByName(
       hostGroupName,
     );
+
+    if (!groupId) {
+      throw new AppError('Grupo inválido.');
+    }
 
     const hosts = await this.createHostAdapter.getHostsByGroupID(groupId);
 

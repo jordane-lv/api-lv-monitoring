@@ -1,5 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
+import { AppError } from '../../../../errors/AppError';
 import { ICreateMapAdapter } from '../../adapters/ICreateMapAdapter';
 
 interface IResponse {
@@ -15,9 +16,17 @@ export class ListMapsUseCase {
   ) {}
 
   async execute(userGroupName: string): Promise<IResponse[]> {
+    if (!userGroupName) {
+      throw new AppError('O nome do grupo é obrigatório.');
+    }
+
     const { groupId } = await this.createMapAdapter.getUserGroupByName(
       userGroupName,
     );
+
+    if (!groupId) {
+      throw new AppError('Grupo inválido.');
+    }
 
     const maps = await this.createMapAdapter.getAllMapsByUserGroupId(groupId);
 
