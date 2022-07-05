@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
-import { CreateHostController } from '../modules/hosts/useCases/createHost/CreateHostController';
-import { ListHostsController } from '../modules/hosts/useCases/listHosts/ListHostsController';
-import { ValidateRequestHostDataController } from '../modules/hosts/useCases/validateRequestHostData/ValidateRequestHostDataController';
+import { CreateHostController } from '../../modules/hosts/useCases/createHost/CreateHostController';
+import { ListHostsController } from '../../modules/hosts/useCases/listHosts/ListHostsController';
+import { ValidateRequestHostDataController } from '../../modules/hosts/useCases/validateRequestHostData/ValidateRequestHostDataController';
 
 export const hostsRoutes = Router();
 

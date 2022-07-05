@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import { AppError } from '../../../../errors/AppError';
+import { AppError } from '../../../../shared/errors/AppError';
 import check from '../../../../utils/validate';
 import { ICreateGroupsAdapter } from '../../adapters/ICreateGroupsAdapter';
 
