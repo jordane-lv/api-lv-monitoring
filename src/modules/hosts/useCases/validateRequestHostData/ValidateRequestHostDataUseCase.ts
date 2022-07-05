@@ -1,4 +1,4 @@
-import { AppError } from '../../../../errors/AppError';
+import { AppError } from '../../../../shared/errors/AppError';
 import checks from '../../../../utils/validate';
 import { hostTypes, HostType } from '../../types/hostTypes';
 

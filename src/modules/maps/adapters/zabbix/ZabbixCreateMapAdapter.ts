@@ -1,5 +1,5 @@
-import { AppError } from '../../../../errors/AppError';
-import { ZabbixApi } from '../../../../services/zabbix-api';
+import { AppError } from '../../../../shared/errors/AppError';
+import { ZabbixApi } from '../../../../shared/services/zabbix-api';
 import {
   ICreateMapAdapter,
   ICreateMapData,
