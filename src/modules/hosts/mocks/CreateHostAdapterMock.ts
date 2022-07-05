@@ -1,22 +1,35 @@
 import {
   ICreateHostData,
+  ICreateHostResponse,
   IHostGroupResponse,
   IHostResponse,
 } from '../adapters/ICreateHostAdapter';
 
 const hosts: IHostResponse[] = [];
 
-const createHostSpy = jest.fn(async ({ name, ipAddress }: ICreateHostData) => {
-  hosts.push({
+const createHostSpy = jest.fn(
+  async ({
     name,
-    hostId: 'mock',
-    interfaces: [
-      {
-        ip: ipAddress,
-      },
-    ],
-  });
-});
+    ipAddress,
+  }: ICreateHostData): Promise<ICreateHostResponse> => {
+    const host = {
+      name,
+      hostId: 'mock',
+      interfaces: [
+        {
+          ip: ipAddress,
+        },
+      ],
+    };
+
+    hosts.push(host);
+
+    return {
+      name,
+      hostId: host.hostId,
+    };
+  },
+);
 
 const getHostGroupByNameSpy = jest.fn(async (groupName?: string) => {
   const group = { groupId: 'teste', groupName: 'TST' } as IHostGroupResponse;

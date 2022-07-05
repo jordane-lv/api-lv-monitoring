@@ -8,6 +8,11 @@ export interface ICreateHostData {
   };
 }
 
+export interface ICreateHostResponse {
+  name: string;
+  hostId: string;
+}
+
 export interface IHostGroupResponse {
   groupName: string;
   groupId: string;
@@ -20,7 +25,7 @@ export interface IHostResponse {
 }
 
 export interface ICreateHostAdapter {
-  create(data: ICreateHostData): Promise<void>;
+  create(data: ICreateHostData): Promise<ICreateHostResponse>;
   getHostGroupByName(groupName: string): Promise<IHostGroupResponse>;
   getHostsByGroupID(groupId: string): Promise<IHostResponse[]>;
 }

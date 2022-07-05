@@ -1,5 +1,4 @@
 import { AppError } from '../../../../errors/AppError';
-import patterns from '../../../../utils/patterns';
 import {
   createHostSpy,
   getHostGroupByNameSpy,
@@ -172,12 +171,6 @@ describe('Create Host', () => {
       ip: '10.0.0.1',
       tipo: 'switch',
     };
-
-    const hostNamePattern = patterns.getHostNameFormat({
-      code: hostDuplicateTest.codigo,
-      groupName: hostDuplicateTest.sigla,
-      name: hostDuplicateTest.nome_host,
-    });
 
     await createHostMock.execute(hostDuplicateTest);
 

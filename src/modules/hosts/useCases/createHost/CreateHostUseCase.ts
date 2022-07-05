@@ -2,7 +2,6 @@ import { inject, injectable } from 'tsyringe';
 
 import { AppError } from '../../../../errors/AppError';
 import patterns from '../../../../utils/patterns';
-import checks from '../../../../utils/validate';
 import { ICreateHostAdapter } from '../../adapters/ICreateHostAdapter';
 import { HostType } from '../../types/hostTypes';
 import { ValidateRequestHostDataUseCase } from '../validateRequestHostData/ValidateRequestHostDataUseCase';
@@ -15,11 +14,16 @@ export interface IRequest {
   tipo?: HostType;
 }
 
-interface IValidatedData {
+interface IResponse {
+  name: string;
+  hostId: string;
+}
+
+interface IValidatedDataResponse {
   name: string;
   ipAddress: string;
   type: HostType;
-  groupId: string;
+  hostGroupId: string;
 }
 
 @injectable()
@@ -31,19 +35,23 @@ export class CreateHostUseCase {
     private validateRequestHostData: ValidateRequestHostDataUseCase,
   ) {}
 
-  async execute(data: IRequest): Promise<void> {
-    const { name, ipAddress, type, groupId } = await this.validateRequestData(
-      data,
-    );
+  async execute(data: IRequest): Promise<IResponse> {
+    const { name, ipAddress, type, hostGroupId } =
+      await this.validateRequestData(data);
 
-    await this.createHostAdapter.create({
+    const createdHost = await this.createHostAdapter.create({
       name,
       ipAddress,
       type,
       hostGroup: {
-        groupId,
+        groupId: hostGroupId,
       },
     });
+
+    return {
+      name: createdHost.name,
+      hostId: createdHost.hostId,
+    };
   }
 
   async validateRequestData({
@@ -52,7 +60,7 @@ export class CreateHostUseCase {
     nome_host,
     sigla,
     tipo,
-  }: IRequest): Promise<IValidatedData> {
+  }: IRequest): Promise<IValidatedDataResponse> {
     this.validateRequestHostData.execute({
       codigo,
       sigla,
@@ -92,7 +100,7 @@ export class CreateHostUseCase {
       name: hostName,
       ipAddress: ip,
       type: tipo,
-      groupId,
+      hostGroupId: groupId,
     };
   }
 }

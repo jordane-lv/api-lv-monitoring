@@ -21,7 +21,26 @@
         },
         "responses": {
           "201": {
-            "description": "Criado"
+            "description": "Criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "hostId": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "name": "12345 EXP - EXEMPLO",
+                    "hostId": "4321"
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "O Host já existe ou algum dado que foi enviado é inválido.",
@@ -112,7 +131,26 @@
         },
         "responses": {
           "201": {
-            "description": "Criado"
+            "description": "Criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "mapId": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "name": "12345 - EXP | MAPA DE EXEMPLO",
+                    "mapId": "4321"
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "O Mapa já existe ou não foram encontrados nenhum host cadastrado com o mesmo código do mapa, sendo assim ele não faz a criação do mapa.",
@@ -254,6 +292,158 @@
           }
         }
       }
+    },
+    "/mass": {
+      "post": {
+        "tags": ["Criação em Massa"],
+        "summary": "Cria vários dados simultâneos. ⚠️ Pode resultar em timeout.",
+        "description": "Com este recurso é possível fazer a criação de grupos, hosts e mapas\n\n⚠️ Dependendo da quantidade de dados que forem enviados para essa rota, pode resultar em timeout.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/MassCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A resposta de cada item será individual, será adicionado um objeto com o status em cada opção recebida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "codigo": {
+                      "type": "string"
+                    },
+                    "sigla": {
+                      "type": "string"
+                    },
+                    "mapas": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "nome_mapa": {
+                            "type": "string"
+                          },
+                          "hosts": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "nome_host": {
+                                  "type": "string"
+                                },
+                                "ip": {
+                                  "type": "string"
+                                },
+                                "tipo": {
+                                  "type": "string"
+                                },
+                                "status": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string"
+                                    },
+                                    "message": {
+                                      "type": "string"
+                                    },
+                                    "statusCode": {
+                                      "type": "number"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "status": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string"
+                              },
+                              "message": {
+                                "type": "string"
+                              },
+                              "statusCode": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "example": {
+                    "codigo": "12345",
+                    "sigla": "EXP",
+                    "mapas": [ 
+                      {
+                        "nome_mapa": "MAPA DE EXEMPLO",
+                        "hosts": [
+                          {
+                            "nome_host": "EXEMPLO",
+                            "ip": "10.0.0.1",
+                            "tipo": "switch",
+                            "status": {
+                              "type": "ok",
+                              "message": "Criado"
+                            }
+                          }
+                        ],
+                        "status": {
+                          "type": "ok",
+                          "message": "Criado"
+                        }
+                      },
+                      {
+                        "nome_mapa": "EXEMPLO SEM HOSTS",
+                        "hosts": [],
+                        "status": {
+                          "type": "error",
+                          "message": "Não foi criado, pois não existem hosts neste mapa."
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "O grupo de hosts ou de usuários já existe.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "message": "Host group \"EXP\" already exists."
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno da aplicação.",
+            "content": {
+              "application/json": {
+                "schema": {            
+                  "$ref": "#/errors/InternalErrors"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -315,6 +505,66 @@
       },
       "example": {
         "sigla": "EXP"
+      }
+    },
+    "MassCreate": {
+      "type": "object",
+      "properties": {
+        "codigo": {
+          "type": "string"
+        },
+        "sigla": {
+          "type": "string"
+        },
+        "mapas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nome_mapa": {
+                "type": "string"
+              },
+              "hosts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "nome_host": {
+                      "type": "string"
+                    },
+                    "ip": {
+                      "type": "string"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "enum": [ "olt", "switch", "router", "wireless", "server", "pop" ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "example": {
+        "codigo": "12345",
+        "sigla": "EXP",
+        "mapas": [ 
+          {
+            "nome_mapa": "MAPA DE EXEMPLO",
+            "hosts": [
+              {
+                "nome_host": "EXEMPLO",
+                "ip": "10.0.0.1",
+                "tipo": "switch"
+              }
+            ]
+          },
+          {
+            "nome_mapa": "EXEMPLO SEM HOSTS",
+            "hosts": []
+          }
+        ]
       }
     }
   },

@@ -4,10 +4,9 @@ import {
   IHostGroupResponse,
   ICreateHostAdapter,
   ICreateHostData,
+  ICreateHostResponse,
   IHostResponse,
 } from '../ICreateHostAdapter';
-
-const api = new ZabbixApi();
 
 interface IHostGroupZabbixResponse {
   name: string;
@@ -15,12 +14,18 @@ interface IHostGroupZabbixResponse {
 }
 
 export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
+  private api: ZabbixApi;
+
+  constructor() {
+    this.api = new ZabbixApi();
+  }
+
   async create({
     name,
     ipAddress,
     type,
     hostGroup,
-  }: ICreateHostData): Promise<void> {
+  }: ICreateHostData): Promise<ICreateHostResponse> {
     try {
       const { groupId } = hostGroup;
 
@@ -54,13 +59,23 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
         },
       };
 
-      const response = await api.execute({ method: 'host.create', params });
+      const response = await this.api.execute({
+        method: 'host.create',
+        params,
+      });
 
       const { data } = response;
 
       if (data.error) {
         throw new AppError(data.error.data);
       }
+
+      const { hostids } = data.result;
+
+      return {
+        name,
+        hostId: hostids[0],
+      };
     } catch (error) {
       throw new AppError(error.message);
     }
@@ -75,7 +90,10 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
         },
       };
 
-      const response = await api.execute({ method: 'hostgroup.get', params });
+      const response = await this.api.execute({
+        method: 'hostgroup.get',
+        params,
+      });
 
       const { data } = response;
 
@@ -106,7 +124,7 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
         selectInterfaces: ['ip'],
       };
 
-      const response = await api.execute({ method: 'host.get', params });
+      const response = await this.api.execute({ method: 'host.get', params });
 
       const { data } = response;
 

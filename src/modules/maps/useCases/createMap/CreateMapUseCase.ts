@@ -11,6 +11,11 @@ interface IRequest {
   mapName: string;
 }
 
+interface IResponse {
+  name: string;
+  mapId: string;
+}
+
 @injectable()
 export class CreateMapUseCase {
   constructor(
@@ -20,7 +25,7 @@ export class CreateMapUseCase {
     private validateRequestMapDataUseCase: ValidateRequestMapDataUseCase,
   ) {}
 
-  async execute({ codigo, sigla, mapName }: IRequest) {
+  async execute({ codigo, sigla, mapName }: IRequest): Promise<IResponse> {
     this.validateRequestMapDataUseCase.execute({
       codigo,
       sigla,
@@ -66,12 +71,17 @@ export class CreateMapUseCase {
       };
     });
 
-    await this.createMapAdapter.create({
+    const createdMap = await this.createMapAdapter.create({
       name,
       hosts,
       userGroup: {
         id: usersGroup.groupId,
       },
     });
+
+    return {
+      name: createdMap.name,
+      mapId: createdMap.mapId,
+    };
   }
 }

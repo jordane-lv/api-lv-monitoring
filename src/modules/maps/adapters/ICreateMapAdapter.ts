@@ -10,6 +10,11 @@ export interface ICreateMapData {
   };
 }
 
+export interface ICreateMapResponse {
+  name: string;
+  mapId: string;
+}
+
 export interface IGroupResponse {
   groupName: string;
   groupId: string;
@@ -27,7 +32,7 @@ export interface IMapResponse {
 }
 
 export interface ICreateMapAdapter {
-  create(data: ICreateMapData): Promise<void>;
+  create(data: ICreateMapData): Promise<ICreateMapResponse>;
   getUserGroupByName(groupName: string): Promise<IGroupResponse>;
   getHostGroupByName(groupName: string): Promise<IGroupResponse>;
   getAllHostsByHostGroupId(groupId: string): Promise<IHostResponse[]>;

@@ -6,9 +6,13 @@ import {
   ICreateUserGroupData,
 } from '../ICreateGroupsAdapter';
 
-const api = new ZabbixApi();
-
 export class ZabbixCreateGroupsAdapter implements ICreateGroupsAdapter {
+  private api: ZabbixApi;
+
+  constructor() {
+    this.api = new ZabbixApi();
+  }
+
   async createHostGroup(groupName: string): Promise<ICreateGroupResponse> {
     try {
       const params = {
@@ -17,7 +21,7 @@ export class ZabbixCreateGroupsAdapter implements ICreateGroupsAdapter {
 
       const method = 'hostgroup.create';
 
-      const response = await api.execute({ method, params });
+      const response = await this.api.execute({ method, params });
 
       const { data } = response;
 
@@ -50,7 +54,7 @@ export class ZabbixCreateGroupsAdapter implements ICreateGroupsAdapter {
 
       const method = 'usergroup.create';
 
-      const response = await api.execute({ method, params });
+      const response = await this.api.execute({ method, params });
 
       const { data } = response;
 
