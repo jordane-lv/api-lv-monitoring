@@ -9,6 +9,16 @@ import {
   IMapResponse,
 } from '../ICreateMapAdapter';
 
+interface IZabbixMapResponse {
+  sysmapid: string;
+  name: string;
+  userGroups: [
+    {
+      usrgrpid: string;
+    },
+  ];
+}
+
 export class ZabbixCreateMapAdapter implements ICreateMapAdapter {
   private api: ZabbixApi;
 
@@ -179,11 +189,7 @@ export class ZabbixCreateMapAdapter implements ICreateMapAdapter {
     try {
       const params = {
         output: ['sysmapid', 'name'],
-        filter: {
-          userGroups: {
-            usrgrpid: groupId,
-          },
-        },
+        selectUserGroups: ['usrgrpid'],
       };
 
       const method = 'map.get';
@@ -196,7 +202,13 @@ export class ZabbixCreateMapAdapter implements ICreateMapAdapter {
         throw new AppError(data.error.data);
       }
 
-      const maps = data.result.map((map): IMapResponse => {
+      const mapsResponse: IZabbixMapResponse[] = data.result;
+
+      const filteredMaps = mapsResponse.filter(map =>
+        map.userGroups.some(usrGroup => usrGroup.usrgrpid === groupId),
+      );
+
+      const maps = filteredMaps.map((map): IMapResponse => {
         return {
           mapId: map.sysmapid,
           mapName: map.name,

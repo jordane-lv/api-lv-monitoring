@@ -11,6 +11,6 @@ export class ListHostsController {
 
     const hosts = await listHostsUseCase.execute(sigla);
 
-    return response.json(hosts);
+    return response.json({ hosts });
   }
 }
