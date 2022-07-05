@@ -11,6 +11,6 @@ export class MassCreateController {
 
     const createdData = await massCreateUseCase.execute(data);
 
-    return response.status(201).json(createdData);
+    return response.status(200).json(createdData);
   }
 }
