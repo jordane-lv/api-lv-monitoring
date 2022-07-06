@@ -34,18 +34,18 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 5. Insira os dados das variáveis de ambiente.
 6. Inicie o servidor com ```docker-compose up -d```.
 
-> **OBS.:** O servidor irá executar na porta 3333 da máquina, para alterar mude as configurações no arquivo ```docker-compose.yaml```.
+> **OBS.:** O servidor irá executar na porta 3333 da máquina, essa configuração pode ser alterada no arquivo ```docker-compose.yaml```.
 
 Exemplo:
 
 ```yaml
 ...
     ports:
-      - 5000:3333
+      - 5000:...
 ...
 ```
 
-> Mantenha a porta que está após os dois pontos como 3333 pois o projeto foi configurado para executar nessa porta.
+> Altere somente a porta que está antes dos dois pontos.
 
 ---
 
