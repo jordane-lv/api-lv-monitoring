@@ -559,7 +559,7 @@
             }
           },
           "400": {
-            "description": "O grupo de hosts ou de usuários já existe.",
+            "description": "Nome do grupo inválido.",
             "content": {
               "application/json": {
                 "schema": {
@@ -570,7 +570,7 @@
                     }
                   },
                   "example": {
-                    "message": "Host group \"EXP\" already exists."
+                    "message": "Nome do grupo inválido."
                   }
                 }
               }
