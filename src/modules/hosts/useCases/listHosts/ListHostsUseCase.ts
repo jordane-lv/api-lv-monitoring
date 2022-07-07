@@ -35,6 +35,6 @@ export class ListHostsUseCase {
 
     const hosts = await this.createHostAdapter.getHostsByGroupID(groupId);
 
-    return hosts || [];
+    return hosts;
   }
 }

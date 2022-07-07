@@ -21,18 +21,22 @@ export class CreateGroupsUseCase {
       throw new AppError('Nome do grupo inválido.');
     }
 
-    const hostGroup = await this.createGroupsAdapter.createHostGroup(groupName);
+    let hostGroup = await this.createGroupsAdapter.getHostGroup(groupName);
 
-    if (!hostGroup || !hostGroup.groupId) {
-      throw new AppError('Não foi possível obter o ID do grupo de hosts.');
+    if (!hostGroup) {
+      hostGroup = await this.createGroupsAdapter.createHostGroup(groupName);
     }
 
     const hostGroupId = hostGroup.groupId;
 
-    const userGroup = await this.createGroupsAdapter.createUserGroup({
-      groupName,
-      hostGroupId,
-    });
+    let userGroup = await this.createGroupsAdapter.getUserGroup(groupName);
+
+    if (!userGroup) {
+      userGroup = await this.createGroupsAdapter.createUserGroup({
+        groupName,
+        hostGroupId,
+      });
+    }
 
     return {
       hostGroupId,
