@@ -47,12 +47,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  },
+                  "$ref": "#/components/schemas/ErrorModel",
                   "example": {
                     "message": "O host com nome 12345 EXP - EXEMPLO já existe."
                   }
@@ -65,7 +60,7 @@
             "content": {
               "application/json": {
                 "schema": {            
-                  "$ref": "#/errors/InternalErrors"
+                  "$ref": "#/components/schemas/InternalErrors"
                 }
               }
             }
@@ -99,12 +94,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  },
+                  "$ref": "#/components/schemas/ErrorModel",
                   "example": {
                     "message": "O nome do host \"EX@AMPLE\" está incorreto."
                   }
@@ -187,7 +177,7 @@
             "content": {
               "application/json": {
                 "schema": {            
-                  "$ref": "#/errors/InternalErrors"
+                  "$ref": "#/components/schemas/InternalErrors"
                 }
               }
             }
@@ -237,12 +227,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  },
+                  "$ref": "#/components/schemas/ErrorModel",
                   "example": {
                     "message": "Não existem hosts cadastrados com o mesmo código do mapa."
                   }
@@ -255,7 +240,7 @@
             "content": {
               "application/json": {
                 "schema": {            
-                  "$ref": "#/errors/InternalErrors"
+                  "$ref": "#/components/schemas/InternalErrors"
                 }
               }
             }
@@ -289,12 +274,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  },
+                  "$ref": "#/components/schemas/ErrorModel",
                   "example": {
                     "message": "O nome do mapa \"EX@AMPLE\" está incorreto."
                   }
@@ -361,7 +341,7 @@
             "content": {
               "application/json": {
                 "schema": {            
-                  "$ref": "#/errors/InternalErrors"
+                  "$ref": "#/components/schemas/InternalErrors"
                 }
               }
             }
@@ -411,12 +391,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  },
+                  "$ref": "#/components/schemas/ErrorModel",
                   "example": {
                     "message": "Nome do grupo inválido."
                   }
@@ -429,7 +404,7 @@
             "content": {
               "application/json": {
                 "schema": {            
-                  "$ref": "#/errors/InternalErrors"
+                  "$ref": "#/components/schemas/InternalErrors"
                 }
               }
             }
@@ -559,18 +534,13 @@
             }
           },
           "400": {
-            "description": "O grupo de hosts ou de usuários já existe.",
+            "description": "Nome do grupo inválido.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  },
+                  "$ref": "#/components/schemas/ErrorModel",
                   "example": {
-                    "message": "Host group \"EXP\" already exists."
+                    "message": "Nome do grupo inválido."
                   }
                 }
               }
@@ -581,7 +551,7 @@
             "content": {
               "application/json": {
                 "schema": {            
-                  "$ref": "#/errors/InternalErrors"
+                  "$ref": "#/components/schemas/InternalErrors"
                 }
               }
             }
@@ -712,20 +682,40 @@
       }
     }
   },
-  "errors": {
-    "InternalErrors": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string"
-          },
-        "message": {
-          "type": "string"
+  "components": {
+    "schemas": {
+      "ErrorModel": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          }
         }
       },
-      "example": {
-        "status": "error",
-        "message": "Internal error"
+      "InternalErrors": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ErrorModel"
+          },
+          {
+            "type": "object",
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "status": "error",
+              "message": "Internal error"
+            }
+          }
+        ]
       }
     }
   }

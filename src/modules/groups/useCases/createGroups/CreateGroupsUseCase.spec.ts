@@ -2,6 +2,9 @@ import { AppError } from '../../../../shared/errors/AppError';
 import {
   createHostGroupMock,
   createUserGroupMock,
+  getHostGroupMock,
+  getUserGroupMock,
+  clearMocks,
 } from '../../mocks/CreateGroupsAdapterMock';
 import { CreateGroupsUseCase } from './CreateGroupsUseCase';
 
@@ -9,6 +12,12 @@ describe('Create Groups', () => {
   const createGroupsUseCase = new CreateGroupsUseCase({
     createHostGroup: createHostGroupMock,
     createUserGroup: createUserGroupMock,
+    getHostGroup: getHostGroupMock,
+    getUserGroup: getUserGroupMock,
+  });
+
+  beforeEach(() => {
+    clearMocks();
   });
 
   it('should be able to create new user and host groups', async () => {
@@ -20,16 +29,6 @@ describe('Create Groups', () => {
 
     expect(createHostGroupMock).toBeCalled();
     expect(createUserGroupMock).toBeCalled();
-  });
-
-  it('should not be able to create a new user group without host group id', async () => {
-    const groupName = 'SID';
-
-    await expect(createGroupsUseCase.execute(groupName)).rejects.toBeInstanceOf(
-      AppError,
-    );
-
-    expect(createUserGroupMock).not.toBeCalled();
   });
 
   it('should not be able to create a new user and host groups with invalid group name', async () => {

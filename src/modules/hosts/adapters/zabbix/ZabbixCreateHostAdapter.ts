@@ -144,7 +144,7 @@ export class ZabbixCreateHostAdapter implements ICreateHostAdapter {
         };
       });
 
-      return hosts;
+      return hosts || hosts.length > 0 ? hosts : [];
     } catch (error) {
       throw new AppError(error.message);
     }
