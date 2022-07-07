@@ -2,7 +2,8 @@
   "openapi": "3.0.3",
   "info": {
     "title": "API LV Monitoring",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "API criada com o intuito de padronizar e automatizar o processo da primeira criação dos dados, dos clientes da LV Network, no sistema de monitoramento."
   },
   "paths": {
     "/hosts": {
