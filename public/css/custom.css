@@ -1,0 +1,9 @@
+.topbar-wrapper img {
+  content: url('/imgs/logo-lv-network-dark.svg');
+  height: 40px;
+  width: auto;
+}
+
+.swagger-ui .info .title small.version-stamp {
+  background-color: #f56600;
+}
