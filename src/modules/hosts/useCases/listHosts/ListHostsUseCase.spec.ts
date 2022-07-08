@@ -1,9 +1,10 @@
-import { AppError } from '../../../../shared/errors/AppError';
 import {
   createHostSpy,
   getHostGroupByNameSpy,
   getHostsByGroupIDSpy,
-} from '../../mocks/CreateHostAdapterMock';
+} from '@modules/hosts/adapters/mocks/CreateHostAdapterMock';
+import { AppError } from '@shared/errors/AppError';
+
 import { ListHostsUseCase } from './ListHostsUseCase';
 
 let listHostsUseCase: ListHostsUseCase;

@@ -1,22 +1,25 @@
-import { AppError } from '../../../../shared/errors/AppError';
 import {
+  clearMocks,
   createHostGroupMock,
   createUserGroupMock,
   getHostGroupMock,
   getUserGroupMock,
-  clearMocks,
-} from '../../mocks/CreateGroupsAdapterMock';
+} from '@modules/groups/adapters/mocks/CreateGroupsAdapterMock';
+import { AppError } from '@shared/errors/AppError';
+
 import { CreateGroupsUseCase } from './CreateGroupsUseCase';
 
-describe('Create Groups', () => {
-  const createGroupsUseCase = new CreateGroupsUseCase({
-    createHostGroup: createHostGroupMock,
-    createUserGroup: createUserGroupMock,
-    getHostGroup: getHostGroupMock,
-    getUserGroup: getUserGroupMock,
-  });
+let createGroupsUseCase: CreateGroupsUseCase;
 
+describe('Create Groups', () => {
   beforeEach(() => {
+    createGroupsUseCase = new CreateGroupsUseCase({
+      createHostGroup: createHostGroupMock,
+      createUserGroup: createUserGroupMock,
+      getHostGroup: getHostGroupMock,
+      getUserGroup: getUserGroupMock,
+    });
+
     clearMocks();
   });
 

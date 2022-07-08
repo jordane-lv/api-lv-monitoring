@@ -1,9 +1,9 @@
 import { inject, injectable } from 'tsyringe';
 
-import { CreateGroupsUseCase } from '../../../groups/useCases/createGroups/CreateGroupsUseCase';
-import { HostType } from '../../../hosts/types/hostTypes';
-import { CreateHostUseCase } from '../../../hosts/useCases/createHost/CreateHostUseCase';
-import { CreateMapUseCase } from '../../../maps/useCases/createMap/CreateMapUseCase';
+import { CreateGroupsUseCase } from '@modules/groups/useCases/createGroups/CreateGroupsUseCase';
+import { HostType } from '@modules/hosts/types/hostTypes';
+import { CreateHostUseCase } from '@modules/hosts/useCases/createHost/CreateHostUseCase';
+import { CreateMapUseCase } from '@modules/maps/useCases/createMap/CreateMapUseCase';
 
 type ResponseStatus = {
   type: string;

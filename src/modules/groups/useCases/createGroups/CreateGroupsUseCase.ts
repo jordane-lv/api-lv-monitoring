@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe';
 
-import { AppError } from '../../../../shared/errors/AppError';
-import check from '../../../../utils/validate';
-import { ICreateGroupsAdapter } from '../../adapters/ICreateGroupsAdapter';
+import { ICreateGroupsAdapter } from '@modules/groups/adapters/ICreateGroupsAdapter';
+import { AppError } from '@shared/errors/AppError';
+import check from '@utils/validate';
 
 interface IResponse {
   hostGroupId: string;

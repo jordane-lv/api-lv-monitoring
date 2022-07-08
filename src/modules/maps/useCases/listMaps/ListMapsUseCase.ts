@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
-import { AppError } from '../../../../shared/errors/AppError';
-import { ICreateMapAdapter } from '../../adapters/ICreateMapAdapter';
+import { ICreateMapAdapter } from '@modules/maps/adapters/ICreateMapAdapter';
+import { AppError } from '@shared/errors/AppError';
 
 interface IResponse {
   mapId: string;

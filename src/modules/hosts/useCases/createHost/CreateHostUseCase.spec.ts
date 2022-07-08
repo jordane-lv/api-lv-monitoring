@@ -1,30 +1,33 @@
-import { AppError } from '../../../../shared/errors/AppError';
 import {
   createHostSpy,
   getHostGroupByNameSpy,
   getHostsByGroupIDSpy,
   clearHostList,
-} from '../../mocks/CreateHostAdapterMock';
+} from '@modules/hosts/adapters/mocks/CreateHostAdapterMock';
+import { AppError } from '@shared/errors/AppError';
+
 import { ValidateRequestHostDataUseCase } from '../validateRequestHostData/ValidateRequestHostDataUseCase';
 import { IRequest, CreateHostUseCase } from './CreateHostUseCase';
 
-describe('Create Host', () => {
-  const createHostMock = new CreateHostUseCase(
-    {
-      create: createHostSpy,
-      getHostGroupByName: getHostGroupByNameSpy,
-      getHostsByGroupID: getHostsByGroupIDSpy,
-    },
-    new ValidateRequestHostDataUseCase(),
-  );
+let createHostUseCase: CreateHostUseCase;
 
+describe('Create Host', () => {
   beforeEach(() => {
+    createHostUseCase = new CreateHostUseCase(
+      {
+        create: createHostSpy,
+        getHostGroupByName: getHostGroupByNameSpy,
+        getHostsByGroupID: getHostsByGroupIDSpy,
+      },
+      new ValidateRequestHostDataUseCase(),
+    );
+
     clearHostList();
   });
 
   it('should be able to create a new host', async () => {
     await expect(
-      createHostMock.execute({
+      createHostUseCase.execute({
         codigo: '12345',
         sigla: 'TST',
         nome_host: 'TEST HOST',
@@ -46,9 +49,9 @@ describe('Create Host', () => {
       tipo: 'switch',
     } as IRequest;
 
-    await expect(createHostMock.execute(hostEmptyCode)).rejects.toBeInstanceOf(
-      AppError,
-    );
+    await expect(
+      createHostUseCase.execute(hostEmptyCode),
+    ).rejects.toBeInstanceOf(AppError);
 
     expect(createHostSpy).not.toBeCalled();
   });
@@ -63,7 +66,7 @@ describe('Create Host', () => {
     } as IRequest;
 
     await expect(
-      createHostMock.execute(hostInvalidCode),
+      createHostUseCase.execute(hostInvalidCode),
     ).rejects.toBeInstanceOf(AppError);
 
     expect(createHostSpy).not.toBeCalled();
@@ -79,7 +82,7 @@ describe('Create Host', () => {
     } as IRequest;
 
     await expect(
-      createHostMock.execute(hostEmptyInitial),
+      createHostUseCase.execute(hostEmptyInitial),
     ).rejects.toBeInstanceOf(AppError);
 
     expect(createHostSpy).not.toBeCalled();
@@ -95,7 +98,7 @@ describe('Create Host', () => {
     } as IRequest;
 
     await expect(
-      createHostMock.execute(hostInvalidInitial),
+      createHostUseCase.execute(hostInvalidInitial),
     ).rejects.toBeInstanceOf(AppError);
 
     expect(getHostGroupByNameSpy).not.toBeCalled();
@@ -104,7 +107,7 @@ describe('Create Host', () => {
 
   it('should not be possible to register a new host with the empty host name', async () => {
     await expect(
-      createHostMock.execute({
+      createHostUseCase.execute({
         codigo: '12345',
         sigla: 'TST',
         nome_host: '',
@@ -118,7 +121,7 @@ describe('Create Host', () => {
 
   it('should not be able to create a new host with the empty ip address', async () => {
     await expect(
-      createHostMock.execute({
+      createHostUseCase.execute({
         codigo: '12345',
         sigla: 'TST',
         nome_host: 'EMPTY IP ADDRESS',
@@ -140,7 +143,7 @@ describe('Create Host', () => {
     } as IRequest;
 
     await expect(
-      createHostMock.execute(invalidHostName),
+      createHostUseCase.execute(invalidHostName),
     ).rejects.toBeInstanceOf(AppError);
 
     expect(createHostSpy).not.toBeCalled();
@@ -156,7 +159,7 @@ describe('Create Host', () => {
     } as IRequest;
 
     await expect(
-      createHostMock.execute(hostInvalidIPAddress),
+      createHostUseCase.execute(hostInvalidIPAddress),
     ).rejects.toBeInstanceOf(AppError);
 
     expect(getHostGroupByNameSpy).not.toBeCalled();
@@ -172,19 +175,19 @@ describe('Create Host', () => {
       tipo: 'switch',
     };
 
-    await createHostMock.execute(hostDuplicateTest);
+    await createHostUseCase.execute(hostDuplicateTest);
 
     hostDuplicateTest.ip = '10.0.0.6';
 
     await expect(
-      createHostMock.execute(hostDuplicateTest),
+      createHostUseCase.execute(hostDuplicateTest),
     ).rejects.toBeInstanceOf(AppError);
   });
 
   it('should not be possible to register a host with an existing IP', async () => {
     const existingIpAddress = '10.0.1.10';
 
-    await createHostMock.execute({
+    await createHostUseCase.execute({
       codigo: '12345',
       sigla: 'TST',
       nome_host: 'FIRST HOST',
@@ -193,7 +196,7 @@ describe('Create Host', () => {
     });
 
     await expect(
-      createHostMock.execute({
+      createHostUseCase.execute({
         codigo: '12345',
         sigla: 'TST',
         nome_host: 'ANOTHER HOST DUPLICATING IP ADDRESS',

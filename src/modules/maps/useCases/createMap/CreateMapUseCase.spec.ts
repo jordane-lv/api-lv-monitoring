@@ -1,26 +1,30 @@
-import { AppError } from '../../../../shared/errors/AppError';
-import patterns from '../../../../utils/patterns';
 import {
   createMapSpy,
   getAllHostsByHostGroupIdSpy,
   getAllMapsByUserGroupIdSpy,
   getHostGroupByNameSpy,
   getUserGroupByNameSpy,
-} from '../../mocks/CreateMapAdapterMock';
+} from '@modules/maps/adapters/mocks/CreateMapAdapterMock';
+import { AppError } from '@shared/errors/AppError';
+
 import { ValidateRequestMapDataUseCase } from '../validateRequestMapData/ValidateRequestMapDataUseCase';
 import { CreateMapUseCase } from './CreateMapUseCase';
 
+let createMapUseCase: CreateMapUseCase;
+
 describe('Create Map', () => {
-  const createMapUseCase = new CreateMapUseCase(
-    {
-      create: createMapSpy,
-      getAllHostsByHostGroupId: getAllHostsByHostGroupIdSpy,
-      getHostGroupByName: getHostGroupByNameSpy,
-      getUserGroupByName: getUserGroupByNameSpy,
-      getAllMapsByUserGroupId: getAllMapsByUserGroupIdSpy,
-    },
-    new ValidateRequestMapDataUseCase(),
-  );
+  beforeEach(() => {
+    createMapUseCase = new CreateMapUseCase(
+      {
+        create: createMapSpy,
+        getAllHostsByHostGroupId: getAllHostsByHostGroupIdSpy,
+        getHostGroupByName: getHostGroupByNameSpy,
+        getUserGroupByName: getUserGroupByNameSpy,
+        getAllMapsByUserGroupId: getAllMapsByUserGroupIdSpy,
+      },
+      new ValidateRequestMapDataUseCase(),
+    );
+  });
 
   it('should be able to create a new map', async () => {
     await expect(
@@ -86,12 +90,6 @@ describe('Create Map', () => {
       sigla: 'TST',
       mapName: 'EXISTING MAP',
     };
-
-    const mapNamePattern = patterns.getMapNameFormat({
-      code: existingMap.codigo,
-      groupName: existingMap.sigla,
-      mapName: existingMap.mapName,
-    });
 
     await createMapUseCase.execute(existingMap);
 

@@ -1,6 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
-import { AppError } from '../../../../shared/errors/AppError';
+import { AppError } from '@shared/errors/AppError';
+
 import { ICreateHostAdapter } from '../../adapters/ICreateHostAdapter';
 
 interface IInterfaces {

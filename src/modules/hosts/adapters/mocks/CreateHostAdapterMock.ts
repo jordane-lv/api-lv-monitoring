@@ -3,7 +3,7 @@ import {
   ICreateHostResponse,
   IHostGroupResponse,
   IHostResponse,
-} from '../adapters/ICreateHostAdapter';
+} from '../ICreateHostAdapter';
 
 const hosts: IHostResponse[] = [];
 

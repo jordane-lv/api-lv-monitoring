@@ -1,7 +1,7 @@
 import {
   ICreateGroupResponse,
   ICreateUserGroupData,
-} from '../adapters/ICreateGroupsAdapter';
+} from '../ICreateGroupsAdapter';
 
 const hostGroupsInMemory = [] as ICreateGroupResponse[];
 const userGroupsInMemory = [] as ICreateGroupResponse[];
