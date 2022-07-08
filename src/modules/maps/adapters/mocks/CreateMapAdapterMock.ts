@@ -3,7 +3,7 @@ import {
   IMapResponse,
   ICreateMapData,
   ICreateMapResponse,
-} from '../adapters/ICreateMapAdapter';
+} from '../ICreateMapAdapter';
 
 const maps: IMapResponse[] = [];
 

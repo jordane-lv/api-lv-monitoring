@@ -1,17 +1,18 @@
-import { AppError } from '../../../../shared/errors/AppError';
 import {
   createMapSpy,
   getAllHostsByHostGroupIdSpy,
   getAllMapsByUserGroupIdSpy,
   getHostGroupByNameSpy,
   getUserGroupByNameSpy,
-} from '../../mocks/CreateMapAdapterMock';
+} from '@modules/maps/adapters/mocks/CreateMapAdapterMock';
+import { AppError } from '@shared/errors/AppError';
+
 import { ListMapsUseCase } from './ListMapsUseCase';
 
 let listMapsUseCase: ListMapsUseCase;
 
 describe('List Maps', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     listMapsUseCase = new ListMapsUseCase({
       create: createMapSpy,
       getAllHostsByHostGroupId: getAllHostsByHostGroupIdSpy,
