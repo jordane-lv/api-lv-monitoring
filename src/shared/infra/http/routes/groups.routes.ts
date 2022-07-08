@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { CreateGroupsController } from '../../modules/groups/useCases/createGroups/CreateGroupsController';
+import { CreateGroupsController } from '@modules/groups/useCases/createGroups/CreateGroupsController';
 
 const createGroupsController = new CreateGroupsController();
 

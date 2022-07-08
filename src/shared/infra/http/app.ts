@@ -1,13 +1,14 @@
 import 'reflect-metadata';
 import 'dotenv/config';
-import '../shared/container';
+import '@shared/container';
 
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import 'express-async-errors';
 
-import swaggerFile from '../docs/swagger.json';
-import { swaggerOptions } from '../docs/swaggerOptions';
+import swaggerFile from '@docs/swagger.json';
+import { swaggerOptions } from '@docs/swaggerOptions';
+
 import { customErrors } from './middlewares/CustomErrors';
 import { routes } from './routes';
 

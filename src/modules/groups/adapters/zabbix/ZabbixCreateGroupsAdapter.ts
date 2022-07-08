@@ -1,8 +1,9 @@
-import { AppError } from '../../../../shared/errors/AppError';
-import { ZabbixApi } from '../../../../shared/services/zabbix-api';
+import { AppError } from '@shared/errors/AppError';
+import { ZabbixApi } from '@shared/services/zabbix-api';
+
 import {
-  ICreateGroupsAdapter,
   ICreateGroupResponse,
+  ICreateGroupsAdapter,
   ICreateUserGroupData,
 } from '../ICreateGroupsAdapter';
 

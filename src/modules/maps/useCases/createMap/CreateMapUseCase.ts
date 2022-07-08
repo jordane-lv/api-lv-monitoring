@@ -1,8 +1,9 @@
 import { inject, injectable } from 'tsyringe';
 
-import { AppError } from '../../../../shared/errors/AppError';
-import patterns from '../../../../utils/patterns';
-import { ICreateMapAdapter } from '../../adapters/ICreateMapAdapter';
+import { ICreateMapAdapter } from '@modules/maps/adapters/ICreateMapAdapter';
+import { AppError } from '@shared/errors/AppError';
+import patterns from '@utils/patterns';
+
 import { ValidateRequestMapDataUseCase } from '../validateRequestMapData/ValidateRequestMapDataUseCase';
 
 interface IRequest {

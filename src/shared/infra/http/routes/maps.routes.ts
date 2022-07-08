@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
-import { CreateMapController } from '../../modules/maps/useCases/createMap/CreateMapController';
-import { ListMapsController } from '../../modules/maps/useCases/listMaps/ListMapsController';
-import { ValidateRequestMapDataController } from '../../modules/maps/useCases/validateRequestMapData/ValidateRequestMapDataController';
+import { CreateMapController } from '@modules/maps/useCases/createMap/CreateMapController';
+import { ListMapsController } from '@modules/maps/useCases/listMaps/ListMapsController';
+import { ValidateRequestMapDataController } from '@modules/maps/useCases/validateRequestMapData/ValidateRequestMapDataController';
 
 export const mapsRoutes = Router();
 

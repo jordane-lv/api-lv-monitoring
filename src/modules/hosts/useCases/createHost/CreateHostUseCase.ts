@@ -1,9 +1,10 @@
 import { inject, injectable } from 'tsyringe';
 
-import { AppError } from '../../../../shared/errors/AppError';
-import patterns from '../../../../utils/patterns';
-import { ICreateHostAdapter } from '../../adapters/ICreateHostAdapter';
-import { HostType } from '../../types/hostTypes';
+import { ICreateHostAdapter } from '@modules/hosts/adapters/ICreateHostAdapter';
+import { HostType } from '@modules/hosts/types/hostTypes';
+import { AppError } from '@shared/errors/AppError';
+import patterns from '@utils/patterns';
+
 import { ValidateRequestHostDataUseCase } from '../validateRequestHostData/ValidateRequestHostDataUseCase';
 
 export interface IRequest {
