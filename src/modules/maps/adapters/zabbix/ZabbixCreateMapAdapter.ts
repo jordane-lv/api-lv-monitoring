@@ -57,6 +57,7 @@ export class ZabbixCreateMapAdapter implements ICreateMapAdapter {
         grid_align: 1,
         label_format: 1,
         label_type_host: 5,
+        label_type_image: 0,
         label_string_host: '{HOST.HOST}\n{HOST.IP}',
         iconmapid: 8,
         show_unack: 1,
