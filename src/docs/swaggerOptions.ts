@@ -14,7 +14,7 @@ export const swaggerOptions = {
   swaggerOptions: {
     plugins: [DisableTryItOutPlugin],
   },
-  customCssUrl: '/css/custom.css',
-  customfavIcon: '/favicon.ico',
+  customCssUrl: '/monitoramento/css/custom.css',
+  customfavIcon: '/monitoramento/favicon.ico',
   customSiteTitle: 'API LV Monitoring',
 };
